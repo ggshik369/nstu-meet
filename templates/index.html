@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}NSTU Meet — знакомства в НГТУ{% endblock %}
+{% block content %}
+<section class="hero rounded-4 p-4 p-md-5 mb-5">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-7">
+      <span class="pill">Знакомства внутри университетского сообщества</span>
+      <h1 class="display-4 fw-bold mt-3">Твоя история в НГТУ может начаться здесь.</h1>
+      <p class="lead mt-3 text-secondary">Находи людей по интересам, знакомься, общайся и ищи того, с кем совпадает вайб.</p>
+      <div class="d-flex flex-wrap gap-2 mt-4">
+        <a class="btn btn-primary btn-lg rounded-pill px-4" href="{{ url_for('register') }}">Создать анкету</a>
+        <a class="btn btn-outline-dark btn-lg rounded-pill px-4" href="{{ url_for('login') }}">У меня есть аккаунт</a>
+      </div>
+      <p class="small text-secondary mt-3 mb-0">Только для пользователей 18+. Пока это независимый учебный прототип.</p>
+    </div>
+    <div class="col-lg-5">
+      <div class="hero-card mx-auto">
+        <div class="avatar avatar-xl">💜</div>
+        <div class="mt-3 fw-bold fs-4">Общие интересы. Новые люди.</div>
+        <div class="text-secondary">Лайк → взаимность → чат</div>
+        <div class="match-chip mt-4">✨ Это взаимно!</div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="row g-3">
+  <div class="col-md-4"><div class="feature h-100"><div class="feature-icon">🧭</div><h3>Находи своих</h3><p>Расскажи о себе, факультете и интересах — смотри анкеты других пользователей.</p></div></div>
+  <div class="col-md-4"><div class="feature h-100"><div class="feature-icon">💞</div><h3>Взаимный интерес</h3><p>Личный чат откроется только после того, как вы понравитесь друг другу.</p></div></div>
+  <div class="col-md-4"><div class="feature h-100"><div class="feature-icon">🛡️</div><h3>Твои границы важны</h3><p>Можно заблокировать пользователя или отправить жалобу. Не делись личными данными.</p></div></div>
+</div>
+{% endblock %}

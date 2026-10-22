@@ -1,0 +1,10 @@
+{
+  "name": "NSTU Meet — знакомства в НГТУ",
+  "short_name": "NSTU Meet",
+  "description": "Знакомства и общение внутри университетского сообщества",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9fd",
+  "theme_color": "#5f49d8",
+  "icons": [{"src": "/static/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}]
+}

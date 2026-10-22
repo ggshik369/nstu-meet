@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Анкеты — NSTU Meet{% endblock %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
+  <div><span class="eyebrow">Знакомства в НГТУ</span><h1 class="display-6 fw-bold mb-1">Кто тебе по вайбу?</h1><p class="text-secondary mb-0">Взаимный лайк откроет личный чат.</p></div>
+  <div class="small text-secondary">{% if is_premium %}Premium: без дневного лимита{% else %}Лайки сегодня: {{ likes_today }}/10{% endif %}</div>
+</div>
+{% if limit_reached %}
+<div class="alert alert-warning d-flex flex-wrap align-items-center justify-content-between gap-2"><span>На сегодня бесплатные лайки закончились.</span><a class="btn btn-sm btn-dark rounded-pill" href="{{ url_for('premium') }}">Посмотреть Premium</a></div>
+{% endif %}
+{% if not profiles %}
+<div class="empty-state"><div class="feature-icon">🌱</div><h2 class="h4">Пока больше нет анкет</h2><p class="text-secondary">Пригласи знакомых из университета или загляни позже.</p></div>
+{% else %}
+<div class="row g-4">
+{% for p in profiles %}
+<div class="col-md-6 col-xl-4">
+  <article class="person-card h-100">
+    <div class="person-top"><div class="avatar">{{ p['display_name'][:1]|upper }}</div><div><h2 class="h5 fw-bold mb-1">{{ p['display_name'] }}, {{ p['age'] }}</h2><div class="text-secondary small">{{ p['faculty'] or 'Факультет не указан' }}{% if p['course'] %} · {{ p['course'] }}{% endif %}</div></div></div>
+    <div class="mt-3"><span class="tag">{{ p['looking_for'] }}</span></div>
+    {% if p['interests'] %}<p class="mt-3 mb-2"><strong>Интересы:</strong> {{ p['interests'] }}</p>{% endif %}
+    <p class="bio">{{ p['about'] or 'Пользователь пока ничего не рассказал о себе.' }}</p>
+    <div class="d-flex gap-2 mt-auto pt-3">
+      <form method="post" action="{{ url_for('like', target_id=p['id']) }}" class="flex-grow-1">
+        <button class="btn btn-primary rounded-pill w-100" {% if limit_reached %}disabled{% endif %}>💜 Нравится</button>
+      </form>
+      <form method="post" action="{{ url_for('block', target_id=p['id']) }}" onsubmit="return confirm('Заблокировать эту анкету?');"><button class="btn btn-outline-secondary rounded-pill" title="Заблокировать">⊘</button></form>
+    </div>
+    <details class="mt-3"><summary class="small text-secondary">Пожаловаться</summary>
+      <form method="post" action="{{ url_for('report', target_id=p['id']) }}" class="mt-2">
+        <textarea class="form-control form-control-sm mb-2" name="reason" rows="2" maxlength="500" required placeholder="Опиши причину жалобы"></textarea>
+        <button class="btn btn-sm btn-outline-danger rounded-pill">Отправить жалобу</button>
+      </form>
+    </details>
+  </article>
+</div>
+{% endfor %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Регистрация — NSTU Meet{% endblock %}
+{% block content %}
+<div class="form-shell">
+  <h1 class="h2 fw-bold">Создай аккаунт</h1><p class="text-secondary">Для совершеннолетних пользователей 18+.</p>
+  <form method="post" class="mt-4">
+    <label class="form-label">Логин</label><input class="form-control mb-3" name="username" minlength="3" maxlength="40" required autocomplete="username">
+    <label class="form-label">Пароль</label><input class="form-control mb-3" type="password" name="password" minlength="8" required autocomplete="new-password">
+    <label class="form-label">Имя или ник в анкете</label><input class="form-control mb-3" name="display_name" maxlength="50" required>
+    <label class="form-label">Возраст</label><input class="form-control mb-3" type="number" name="age" min="18" max="100" required>
+    <label class="form-label">Факультет (необязательно)</label><input class="form-control mb-3" name="faculty" maxlength="100" placeholder="Например, АВТФ">
+    <label class="form-label">Курс (необязательно)</label><input class="form-control mb-3" name="course" maxlength="30" placeholder="Например, 1 курс">
+    <div class="form-check mb-3"><input class="form-check-input" type="checkbox" required id="agecheck"><label class="form-check-label" for="agecheck">Мне исполнилось 18 лет, и я согласен(на) соблюдать правила уважительного общения.</label></div>
+    <button class="btn btn-primary rounded-pill w-100 py-2">Зарегистрироваться</button>
+  </form>
+  <p class="text-secondary small mt-3">Факультет и курс вводятся самостоятельно и не подтверждают обучение в НГТУ.</p>
+</div>
+{% endblock %}

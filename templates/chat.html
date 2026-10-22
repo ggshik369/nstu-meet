@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Чат с {{ other['display_name'] }} — NSTU Meet{% endblock %}
+{% block content %}
+<div class="chat-shell">
+  <div class="chat-header"><a class="text-decoration-none" href="{{ url_for('matches') }}">← Совпадения</a><div class="person-top mt-3"><div class="avatar">{{ other['display_name'][:1]|upper }}</div><div><h1 class="h5 fw-bold mb-1">{{ other['display_name'] }}, {{ other['age'] }}</h1><div class="small text-secondary">{{ other['faculty'] or 'НГТУ' }}{% if other['course'] %} · {{ other['course'] }}{% endif %}</div></div></div></div>
+  <div class="messages">
+    {% if not messages %}<div class="text-center text-secondary py-5">Это начало разговора. Напиши привет 👋</div>{% endif %}
+    {% for m in messages %}
+      <div class="message-row {% if m['sender_id']==me_id %}mine{% endif %}">
+        <div class="message"><div>{{ m['body'] }}</div><small>{{ m['created_at'] }}</small></div>
+      </div>
+    {% endfor %}
+  </div>
+  <form method="post" class="chat-compose">
+    <input class="form-control" name="body" maxlength="1000" placeholder="Напиши сообщение..." required autocomplete="off">
+    <button class="btn btn-primary rounded-pill px-4">Отправить</button>
+  </form>
+  <p class="small text-secondary mt-3">Не отправляй деньги, пароли или фото документов. Если чувствуешь себя небезопасно — прекрати общение и заблокируй пользователя.</p>
+</div>
+{% endblock %}

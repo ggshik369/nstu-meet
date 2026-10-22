@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Premium — NSTU Meet{% endblock %}
+{% block content %}
+<div class="premium-hero">
+  <div class="premium-mark">✦</div><span class="eyebrow">NSTU Meet Premium</span>
+  <h1 class="display-5 fw-bold mt-2">Больше возможностей для знакомств.</h1>
+  <p class="lead text-secondary">Не обязательная подписка. Основные функции остаются бесплатными.</p>
+  <div class="price">400 ₽ <span>/ 30 дней</span></div>
+  <ul class="benefits">
+    <li>✓ Без дневного лимита лайков</li>
+    <li>✓ Больше возможностей находить взаимный интерес</li>
+    <li>✓ Чат всё равно открывается только после взаимного лайка</li>
+  </ul>
+  {% if is_premium %}
+    <div class="alert alert-success">Premium активен до {{ current_user['premium_until'] }}.</div>
+  {% else %}
+    <form method="post" action="{{ url_for('premium_pay') }}"><button class="btn btn-primary btn-lg rounded-pill px-5">Подключить Premium</button></form>
+  {% endif %}
+  <p class="small text-secondary mt-3">Оплата в этой версии доступна только после настройки YooKassa. Перед реальным запуском проверь юридические и налоговые требования к подписке.</p>
+</div>
+{% endblock %}

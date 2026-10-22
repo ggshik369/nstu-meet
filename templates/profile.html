@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Моя анкета — NSTU Meet{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="profile-side">
+      <div class="avatar avatar-xl">{{ user['display_name'][:1]|upper }}</div>
+      <h2 class="h4 fw-bold mt-3">{{ user['display_name'] }}, {{ user['age'] }}</h2>
+      <div class="text-secondary">{{ user['faculty'] or 'Факультет не указан' }}{% if user['course'] %} · {{ user['course'] }}{% endif %}</div>
+      <hr><p class="small text-secondary">Логин: @{{ user['username'] }}</p>
+      <p class="small text-secondary mb-0">Не указывай телефон, адрес проживания, расписание и другие личные данные в описании.</p>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="panel">
+      <h1 class="h3 fw-bold">Настрой свою анкету</h1>
+      <p class="text-secondary">Покажи, кто ты и с кем хочешь познакомиться.</p>
+      <form method="post">
+        <div class="row">
+          <div class="col-md-8 mb-3"><label class="form-label">Имя или ник</label><input class="form-control" name="display_name" value="{{ user['display_name'] }}" maxlength="50" required></div>
+          <div class="col-md-4 mb-3"><label class="form-label">Возраст (18+)</label><input class="form-control" type="number" name="age" value="{{ user['age'] }}" min="18" max="100" required></div>
+        </div>
+        <div class="row">
+          <div class="col-md-7 mb-3"><label class="form-label">Факультет</label><input class="form-control" name="faculty" value="{{ user['faculty'] }}" maxlength="100" placeholder="Например, АВТФ"></div>
+          <div class="col-md-5 mb-3"><label class="form-label">Курс</label><input class="form-control" name="course" value="{{ user['course'] }}" maxlength="30" placeholder="1 курс"></div>
+        </div>
+        <label class="form-label">Интересы</label><input class="form-control mb-3" name="interests" value="{{ user['interests'] }}" maxlength="300" placeholder="Музыка, игры, спорт, кино...">
+        <label class="form-label">Кого / что ищешь</label>
+        <select class="form-select mb-3" name="looking_for">
+          {% for option in ['Общение и знакомства','Серьёзные отношения','Друзей по интересам','Пока не определился(лась)'] %}
+          <option {% if user['looking_for']==option %}selected{% endif %}>{{ option }}</option>
+          {% endfor %}
+        </select>
+        <label class="form-label">О себе</label><textarea class="form-control mb-4" name="about" rows="5" maxlength="700" placeholder="Расскажи о себе — без номера телефона и других личных данных.">{{ user['about'] }}</textarea>
+        <button class="btn btn-primary rounded-pill px-4">Сохранить анкету</button>
+        <a class="btn btn-outline-dark rounded-pill px-4" href="{{ url_for('discover') }}">Смотреть анкеты</a>
+      </form>
+    </div>
+    <div class="panel mt-3 border-danger-subtle">
+      <h2 class="h6 fw-bold">Деактивация аккаунта</h2><p class="small text-secondary">Скрывает анкету. Для полноценного удаления всех данных в этой демоверсии понадобится администратор базы.</p>
+      <form method="post" action="{{ url_for('delete_account') }}" onsubmit="return confirm('Деактивировать аккаунт?');"><button class="btn btn-sm btn-outline-danger rounded-pill">Деактивировать аккаунт</button></form>
+    </div>
+  </div>
+</div>
+{% endblock %}
