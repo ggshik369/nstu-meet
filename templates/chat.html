@@ -2,19 +2,21 @@
 {% block title %}Чат с {{ other['display_name'] }} — NSTU Meet{% endblock %}
 {% block content %}
 <div class="chat-shell">
-  <div class="chat-header"><a class="text-decoration-none" href="{{ url_for('matches') }}">← Совпадения</a><div class="person-top mt-3"><div class="avatar">{{ other['display_name'][:1]|upper }}</div><div><h1 class="h5 fw-bold mb-1">{{ other['display_name'] }}, {{ other['age'] }}</h1><div class="small text-secondary">{{ other['faculty'] or 'НГТУ' }}{% if other['course'] %} · {{ other['course'] }}{% endif %}</div></div></div></div>
-  <div class="messages">
+  <div class="chat-header"><a class="text-decoration-none" href="{{ url_for('chats') }}">← Все чаты</a><div class="person-top mt-3"><div class="avatar">{{ other['display_name'][:1]|upper }}</div><div><h1 class="h5 fw-bold mb-1">{{ other['display_name'] }}, {{ other['age'] }}</h1><div class="small text-secondary">{{ other['faculty'] or 'НГТУ' }}{% if other['course'] %} · {{ other['course'] }}{% endif %}</div></div></div></div>
+  <div class="messages" id="messages" data-other="{{ other['id'] }}" data-me="{{ me_id }}" data-after="{{ messages[-1]['created_at'] if messages else '' }}">
     {% if not messages %}<div class="text-center text-secondary py-5">Это начало разговора. Напиши привет 👋</div>{% endif %}
     {% for m in messages %}
-      <div class="message-row {% if m['sender_id']==me_id %}mine{% endif %}">
-        <div class="message"><div>{{ m['body'] }}</div><small>{{ m['created_at'] }}</small></div>
+      <div class="message-row {% if m['sender_id']==me_id %}mine{% endif %}" data-msg-key="{{ m['media_type'] }}-{{ m['id'] }}">
+        <div class="message">{% if m['filename'] %}{% if m['media_type']=='video' %}<video controls class="chat-media"><source src="{{ url_for('uploaded_file', filename=m['filename']) }}"></video>{% else %}<a href="{{ url_for('uploaded_file', filename=m['filename']) }}" target="_blank"><img class="chat-media" src="{{ url_for('uploaded_file', filename=m['filename']) }}" alt="Фото"></a>{% endif %}{% else %}<div>{{ m['body'] }}</div>{% endif %}<small>{{ m['created_at'] }}</small></div>
       </div>
     {% endfor %}
   </div>
-  <form method="post" class="chat-compose">
-    <input class="form-control" name="body" maxlength="1000" placeholder="Напиши сообщение..." required autocomplete="off">
-    <button class="btn btn-primary rounded-pill px-4">Отправить</button>
-  </form>
+  <form method="post" class="chat-compose"><input class="form-control" name="body" maxlength="1000" placeholder="Напиши сообщение..." required autocomplete="off"><button class="btn btn-primary rounded-pill px-4">Отправить</button></form>
+  <form method="post" action="{{ url_for('chat_send_media', other_id=other['id']) }}" enctype="multipart/form-data" class="mt-2 d-flex gap-2"><input class="form-control" type="file" name="media" accept="image/*,video/mp4,video/webm,video/quicktime" required><button class="btn btn-outline-primary rounded-pill">📎 Фото / видео</button></form>
   <p class="small text-secondary mt-3">Не отправляй деньги, пароли или фото документов. Если чувствуешь себя небезопасно — прекрати общение и заблокируй пользователя.</p>
 </div>
 {% endblock %}
+
+{% block scripts %}<script>
+(()=>{const box=document.getElementById('messages');if(!box)return;let after=box.dataset.after||'';const seen=new Set([...box.querySelectorAll('[data-msg-key]')].map(x=>x.dataset.msgKey));async function poll(){try{const r=await fetch(`/api/chat/${box.dataset.other}?after=${encodeURIComponent(after)}`,{cache:'no-store'});if(!r.ok)return;const data=await r.json();for(const m of data){if(m.created_at>after)after=m.created_at;const key=m.media_type+'-'+m.id;if(seen.has(key))continue;seen.add(key);const row=document.createElement('div');row.className='message-row '+(Number(m.sender_id)===Number(box.dataset.me)?'mine':'');row.dataset.msgKey=key;const bubble=document.createElement('div');bubble.className='message';if(m.filename){if(m.media_type==='video'){const v=document.createElement('video');v.controls=true;v.className='chat-media';const src=document.createElement('source');src.src='/uploads/'+encodeURIComponent(m.filename);v.appendChild(src);bubble.appendChild(v)}else{const img=document.createElement('img');img.src='/uploads/'+encodeURIComponent(m.filename);img.className='chat-media';img.alt='Фото';bubble.appendChild(img)}}else{const t=document.createElement('div');t.textContent=m.body;bubble.appendChild(t)}const small=document.createElement('small');small.textContent=m.created_at;bubble.appendChild(small);row.appendChild(bubble);box.appendChild(row)}if(data.length)box.scrollTop=box.scrollHeight}catch(e){}}setInterval(poll,2500);})();
+</script>{% endblock %}

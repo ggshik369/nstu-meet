@@ -4,9 +4,9 @@
 <div class="row g-4">
   <div class="col-lg-4">
     <div class="profile-side">
-      <div class="avatar avatar-xl">{{ user['display_name'][:1]|upper }}</div>
+      {% if photos %}<img class="avatar avatar-xl profile-photo" src="{{ url_for('uploaded_file', filename=photos[0]['filename']) }}" alt="Фото профиля">{% else %}<div class="avatar avatar-xl">{{ user['display_name'][:1]|upper }}</div>{% endif %}
       <h2 class="h4 fw-bold mt-3">{{ user['display_name'] }}, {{ user['age'] }}</h2>
-      <div class="text-secondary">{{ user['faculty'] or 'Факультет не указан' }}{% if user['course'] %} · {{ user['course'] }}{% endif %}</div>
+      <div class="text-secondary">{{ user['university'] }} · {{ user['country'] }}<br>{{ user['faculty'] or 'Факультет не указан' }}{% if user['course'] %} · {{ user['course'] }}{% endif %}</div>
       <hr><p class="small text-secondary">Логин: @{{ user['username'] }}</p>
       <p class="small text-secondary mb-0">Не указывай телефон, адрес проживания, расписание и другие личные данные в описании.</p>
     </div>
@@ -20,6 +20,7 @@
           <div class="col-md-8 mb-3"><label class="form-label">Имя или ник</label><input class="form-control" name="display_name" value="{{ user['display_name'] }}" maxlength="50" required></div>
           <div class="col-md-4 mb-3"><label class="form-label">Возраст (18+)</label><input class="form-control" type="number" name="age" value="{{ user['age'] }}" min="18" max="100" required></div>
         </div>
+        <div class="row"><div class="col-md-6 mb-3"><label class="form-label">Страна</label><select class="form-select" name="country">{% for c in countries %}<option {% if user['country']==c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div><div class="col-md-6 mb-3"><label class="form-label">Вуз</label><select class="form-select" name="university">{% for u in universities %}<option {% if user['university']==u %}selected{% endif %}>{{ u }}</option>{% endfor %}</select></div></div>
         <div class="row">
           <div class="col-md-7 mb-3"><label class="form-label">Факультет</label><input class="form-control" name="faculty" value="{{ user['faculty'] }}" maxlength="100" placeholder="Например, АВТФ"></div>
           <div class="col-md-5 mb-3"><label class="form-label">Курс</label><input class="form-control" name="course" value="{{ user['course'] }}" maxlength="30" placeholder="1 курс"></div>
@@ -36,6 +37,7 @@
         <a class="btn btn-outline-dark rounded-pill px-4" href="{{ url_for('discover') }}">Смотреть анкеты</a>
       </form>
     </div>
+    <div class="panel mt-3"><h2 class="h5 fw-bold">📸 Фотографии анкеты</h2><p class="small text-secondary">До 6 изображений. Загружай только фотографии, которыми имеешь право делиться.</p><form method="post" action="{{ url_for('upload_profile_photos') }}" enctype="multipart/form-data" class="d-flex gap-2 flex-wrap"><input class="form-control" type="file" name="photos" accept="image/png,image/jpeg,image/webp,image/gif" multiple required><button class="btn btn-primary rounded-pill">Загрузить</button></form><div class="photo-grid mt-3">{% for photo in photos %}<div class="photo-tile"><img src="{{ url_for('uploaded_file', filename=photo['filename']) }}" alt="Моя фотография"><form method="post" action="{{ url_for('delete_profile_photo', photo_id=photo['id']) }}"><button class="btn btn-sm btn-danger rounded-pill">Удалить</button></form></div>{% else %}<p class="text-secondary small">Пока нет фотографий.</p>{% endfor %}</div></div>
     <div class="panel mt-3 border-danger-subtle">
       <h2 class="h6 fw-bold">Деактивация аккаунта</h2><p class="small text-secondary">Скрывает анкету. Для полноценного удаления всех данных в этой демоверсии понадобится администратор базы.</p>
       <form method="post" action="{{ url_for('delete_account') }}" onsubmit="return confirm('Деактивировать аккаунт?');"><button class="btn btn-sm btn-outline-danger rounded-pill">Деактивировать аккаунт</button></form>
