@@ -20,7 +20,7 @@
           <div class="col-md-8 mb-3"><label class="form-label">Имя или ник</label><input class="form-control" name="display_name" value="{{ user['display_name'] }}" maxlength="50" required></div>
           <div class="col-md-4 mb-3"><label class="form-label">Возраст (18+)</label><input class="form-control" type="number" name="age" value="{{ user['age'] }}" min="18" max="100" required></div>
         </div>
-        <div class="row"><div class="col-md-6 mb-3"><label class="form-label">Страна</label><select class="form-select" name="country">{% for c in countries %}<option {% if user['country']==c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div><div class="col-md-6 mb-3"><label class="form-label">Вуз</label><select class="form-select" name="university">{% for u in universities %}<option {% if user['university']==u %}selected{% endif %}>{{ u }}</option>{% endfor %}</select></div></div>
+        <div class="row"><div class="col-md-6 mb-3"><label class="form-label">Страна</label><select class="form-select" name="country">{% for c in countries %}<option {% if user['country']==c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></div><div class="col-md-6 mb-3"><label class="form-label">Вуз</label><input class="form-control" value="НГТУ — Новосибирский государственный технический университет" readonly></div></div>
         <div class="row">
           <div class="col-md-7 mb-3"><label class="form-label">Факультет</label><input class="form-control" name="faculty" value="{{ user['faculty'] }}" maxlength="100" placeholder="Например, АВТФ"></div>
           <div class="col-md-5 mb-3"><label class="form-label">Курс</label><input class="form-control" name="course" value="{{ user['course'] }}" maxlength="30" placeholder="1 курс"></div>

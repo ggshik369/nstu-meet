@@ -12,3 +12,5 @@ services:
         value: "1"
       - key: PYTHON_VERSION
         value: 3.12.7
+      # Add DATABASE_URL in Render Environment using PostgreSQL Internal Database URL.
+      # After creating a Persistent Disk mounted at /var/data, set UPLOAD_DIR=/var/data/uploads.
