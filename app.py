@@ -29,6 +29,13 @@ elif raw_db_url.startswith('postgresql://'):
 if raw_db_url:
     app.config['SQLALCHEMY_DATABASE_URI'] = raw_db_url
 else:
+    # Never silently switch a deployed Render app to an empty local SQLite DB.
+    # That makes all existing PostgreSQL profiles appear to have disappeared.
+    if os.getenv('RENDER') or os.getenv('RENDER_SERVICE_ID'):
+        raise RuntimeError(
+            'DATABASE_URL is missing on Render. Configure the PostgreSQL DATABASE_URL; '
+            'refusing to start with a temporary SQLite database.'
+        )
     local_db = Path(os.getenv('DATABASE_PATH', 'nstu_dating.db'))
     local_db.parent.mkdir(parents=True, exist_ok=True)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + str(local_db.resolve())
@@ -620,6 +627,19 @@ def bad_request(_): return render_template('error.html',code=400,message='Нек
 def forbidden(_): return render_template('error.html',code=403,message='Нет доступа к этому действию.'),403
 @app.errorhandler(404)
 def not_found(_): return render_template('error.html',code=404,message='Страница не найдена.'),404
+
+@app.route('/health/db')
+def database_health():
+    """Read-only database check; returns aggregate counts only."""
+    try:
+        with db.engine.connect() as connection:
+            total = db.session.query(func.count(User.id)).scalar() or 0
+            active = db.session.query(func.count(User.id)).filter(User.is_active.is_(True)).scalar() or 0
+            return jsonify(status='ok', database='connected', users_total=total,
+                           users_active=active, users_inactive=total-active)
+    except Exception:
+        app.logger.exception('Database health check failed')
+        return jsonify(status='error', database='query_failed'), 503
 
 with app.app_context():
     db.create_all()
