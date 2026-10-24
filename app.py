@@ -47,7 +47,8 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 ALLOWED_IMAGE = {'png', 'jpg', 'jpeg', 'webp', 'gif'}
 ALLOWED_VIDEO = {'mp4', 'webm', 'mov'}
 ALLOWED_DOC = {'pdf', 'ppt', 'pptx', 'png', 'jpg', 'jpeg', 'webp'}
-COUNTRIES = ['Россия', 'Китай', 'Индия', 'Казахстан', 'Беларусь', 'Армения', 'Узбекистан', 'Кыргызстан', 'Германия', 'Другая страна']
+COUNTRIES = ['Россия', 'Китай', 'Казахстан', 'Индия', 'Бангладеш', 'Вьетнам', 'Монголия', 'Беларусь', 'Армения', 'Узбекистан', 'Кыргызстан', 'Таджикистан', 'Турция', 'Иран', 'Ирак', 'Сирия', 'Иордания', 'Египет', 'Нигерия', 'Гана', 'Бразилия', 'Германия', 'Франция', 'Другая страна']
+COUNTRY_FLAGS = {'Россия':'🇷🇺','Китай':'🇨🇳','Казахстан':'🇰🇿','Индия':'🇮🇳','Бангладеш':'🇧🇩','Вьетнам':'🇻🇳','Монголия':'🇲🇳','Беларусь':'🇧🇾','Армения':'🇦🇲','Узбекистан':'🇺🇿','Кыргызстан':'🇰🇬','Таджикистан':'🇹🇯','Турция':'🇹🇷','Иран':'🇮🇷','Ирак':'🇮🇶','Сирия':'🇸🇾','Иордания':'🇯🇴','Египет':'🇪🇬','Нигерия':'🇳🇬','Гана':'🇬🇭','Бразилия':'🇧🇷','Германия':'🇩🇪','Франция':'🇫🇷','Другая страна':'🌐'}
 UNIVERSITIES = ['НГТУ']
 FACULTIES = ['АВТФ', 'ФЭН', 'ФПМИ', 'ФГО', 'ФМА', 'ФТФ', 'РЭФ', 'ФБ', 'Другой факультет']
 COURSES = ['1', '2', '3', '4', '5', '6']
@@ -277,7 +278,7 @@ def register():
                 db.session.add(user); db.session.commit(); session.clear(); session.permanent=True; session['user_id']=user.id
                 flash('Аккаунт создан! Заполни анкету.','success'); return redirect(url_for('profile'))
             except IntegrityError: db.session.rollback(); flash('Такой логин уже занят.','danger')
-    return render_template('register.html', countries=COUNTRIES, universities=UNIVERSITIES, faculties=FACULTIES, courses=COURSES)
+    return render_template('register.html', countries=COUNTRIES, country_flags=COUNTRY_FLAGS, universities=UNIVERSITIES, faculties=FACULTIES, courses=COURSES)
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -307,7 +308,7 @@ def profile():
             user.display_name=name; user.age=age; user.faculty=faculty[:100]; user.course=course[:30]; user.country=country; user.university='НГТУ'; user.interests=interests[:300]; user.about=about[:700]; user.looking_for=looking[:100]
             db.session.commit(); flash('Анкета сохранена.','success'); return redirect(url_for('profile'))
     photos=ProfilePhoto.query.filter_by(user_id=user.id).order_by(ProfilePhoto.id.desc()).all()
-    return render_template('profile.html',user=user,photos=photos,countries=COUNTRIES,universities=UNIVERSITIES,faculties=FACULTIES,courses=COURSES)
+    return render_template('profile.html',user=user,photos=photos,countries=COUNTRIES,country_flags=COUNTRY_FLAGS,universities=UNIVERSITIES,faculties=FACULTIES,courses=COURSES)
 
 @app.route('/discover')
 @login_required
