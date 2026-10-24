@@ -270,10 +270,10 @@ def register():
         elif len(password)<8: flash('Пароль должен содержать минимум 8 символов.','danger')
         elif not name or len(name)>50 or not 18<=age<=100: flash('Укажи имя и возраст от 18 лет.','danger')
         elif country not in COUNTRIES: flash('Выбери страну из списка.','danger')
-        elif request.form.get('university_honest') != 'yes': flash('Подтверди, что честно указал НГТУ.','warning')
+        elif request.form.get('responsibility_ack') != 'yes': flash('Подтверди ответственность за свои действия на сайте.','warning')
         else:
             try:
-                user=User(username=username,password_hash=generate_password_hash(password),display_name=name,age=age,faculty=faculty[:100],course=course[:30],country=country,university='НГТУ',university_honest=True)
+                user=User(username=username,password_hash=generate_password_hash(password),display_name=name,age=age,faculty='',course=course[:30],country=country,university='НГТУ',university_honest=True)
                 db.session.add(user); db.session.commit(); session.clear(); session.permanent=True; session['user_id']=user.id
                 flash('Аккаунт создан! Заполни анкету.','success'); return redirect(url_for('profile'))
             except IntegrityError: db.session.rollback(); flash('Такой логин уже занят.','danger')
@@ -391,11 +391,22 @@ def likes_sent():
         u=User.query.get(l.liked_id)
         if u and u.is_active and not is_blocked(me.id,u.id): profiles.append(u)
     return render_template('likes.html',profiles=profiles,page_title='Мои лайки',received=False)
+@app.route('/likes/sent/<int:target_id>/delete',methods=['POST'])
+@login_required
+def delete_sent_like(target_id):
+    me=get_user()
+    if not premium_active(me):
+        flash('Список отправленных лайков доступен в Premium.','warning')
+        return redirect(url_for('premium'))
+    like_row=Like.query.filter_by(liker_id=me.id,liked_id=target_id).first()
+    if like_row:
+        db.session.delete(like_row); db.session.commit()
+        flash('Лайк удалён из твоего списка.','success')
+    return redirect(url_for('likes_sent'))
 @app.route('/likes/received')
 @login_required
 def likes_received():
     me=get_user()
-    if not premium_active(me): flash('Просмотр тех, кто поставил лайк, доступен в Premium.','warning'); return redirect(url_for('premium'))
     profiles=[]
     for l in Like.query.filter_by(liked_id=me.id).order_by(Like.created_at.desc()).all():
         u=User.query.get(l.liker_id)
