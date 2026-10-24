@@ -55,3 +55,23 @@ input[type=file].form-control{padding:10px 14px;max-width:100%;background:var(--
 .navbar-toggler{border:1px solid rgba(255,255,255,.75)!important;border-radius:999px!important;padding:9px 12px!important;background:rgba(255,255,255,.16)!important;box-shadow:0 0 0 2px rgba(161,138,255,.18)}.navbar-toggler-icon{filter:brightness(0) invert(1);width:1.35em;height:1.35em}
 .form-control,.form-select{border-radius:18px}.btn{font-weight:700;transition:transform .16s,filter .16s}.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
 @media(max-width:575.98px){.chat-shell{padding:12px;border-radius:24px}.messages{padding:14px 0;min-height:260px}.message-row{max-width:94%}.chat-compose{gap:7px}.chat-compose .btn{padding-inline:13px}.chat-shell form[enctype="multipart/form-data"]{flex-wrap:wrap}.chat-shell form[enctype="multipart/form-data"] .form-control,.chat-shell form[enctype="multipart/form-data"] .btn{width:100%}.chat-list-item{padding:13px;border-radius:22px}}
+
+/* Dark-first visual pass: near-black, white text, violet accents */
+:root{--ink:#f7f5ff;--muted:#aaa5c5;--bg:#08080d;--panel:#111118;--panel2:#191923;--purple:#9b7bff;--pink:#c4a7ff;--line:rgba(255,255,255,.09);--shadow:0 18px 55px rgba(0,0,0,.45)}
+body{background:radial-gradient(ellipse at 50% -20%,rgba(124,83,255,.16),transparent 48%),#08080d!important;color:#f7f5ff!important}
+main,footer,.container{--bs-body-color:#f7f5ff} .card,.modal-content,.dropdown-menu,.list-group-item{background:#111118!important;color:#f7f5ff!important;border-color:#292735!important}
+.form-control,.form-select,textarea,input:not([type=checkbox]):not([type=radio]):not([type=file]){background:#14141d!important;color:#f7f5ff!important;border:1px solid #353143!important;box-shadow:none!important}
+.form-control::placeholder,textarea::placeholder{color:#89849f!important;opacity:1}.form-select option{background:#14141d;color:#f7f5ff}
+.btn-light,.btn-outline-light{background:#17151f!important;color:#f7f5ff!important;border:1px solid #4a4166!important}.btn-primary{background:linear-gradient(120deg,#8c6aff,#b39aff)!important;color:#0b0814!important}.btn-outline-primary{color:#c7b9ff!important;border-color:#8c6aff!important}
+.alert{background:#171521!important;color:#f7f5ff!important;border-color:#383149!important}.table{--bs-table-color:#f7f5ff;--bs-table-bg:#111118;--bs-table-border-color:#302c3d}
+.chat-shell{background:#0d0d14!important;border:1px solid #292637!important;border-radius:26px!important;padding:0!important;overflow:hidden;box-shadow:0 18px 55px rgba(0,0,0,.4)!important}
+.chat-header{background:#15131e;padding:16px 20px!important;border-bottom:1px solid #2a2637!important}
+.messages{height:min(62vh,680px)!important;min-height:320px;background:radial-gradient(ellipse at center,rgba(125,91,215,.055),transparent 65%),#0b0b11;padding:20px!important}
+.message{background:#22212d!important;color:#f8f6ff!important;border:1px solid #302c40!important;border-radius:18px 18px 18px 5px!important;box-shadow:none!important}
+.message-row.mine .message{background:#5b438d!important;border-color:#7458a8!important;color:white!important;border-radius:18px 18px 5px 18px!important}
+.message small{color:#b8b1cf!important}.chat-compose{background:#12121a;padding:14px 16px!important;border-top:1px solid #292637!important}.chat-compose .form-control{border-radius:24px!important;background:#20202b!important}
+.chat-list-item{background:#13131c!important;border-color:#292637!important;border-radius:22px!important}.chat-list-item:hover{background:#1c1928!important;border-color:#6c55a4!important}
+/* Subtle motion, no flashing */
+@keyframes violet-glow{0%,100%{box-shadow:0 0 0 rgba(140,106,255,0)}50%{box-shadow:0 0 22px rgba(140,106,255,.13)}}
+.chat-shell{animation:violet-glow 7s ease-in-out infinite}.btn,.person-card,.panel,.chat-list-item{transition:background-color .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
