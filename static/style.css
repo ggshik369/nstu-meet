@@ -141,3 +141,8 @@ input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e
 .feature-icon,.feature .feature-icon,.feature-card .feature-icon,.feature-emoji,.benefit-icon,.emoji-icon{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;clip-path:none!important;width:54px;height:54px;min-width:54px;overflow:visible!important;display:grid;place-items:center}
 .feature-icon::before,.feature-icon::after,.feature-emoji::before,.feature-emoji::after{content:none!important;display:none!important}
 .support-button{color:#fff!important}
+
+/* Homepage: remove outlines around emoji and decorative purple heart */
+.feature-icon,.feature .feature-icon,.feature-card .feature-icon,.feature-emoji,.benefit-icon,.emoji-icon{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;clip-path:none!important}
+/* Remove the decorative purple heart from the homepage hero/premium wave */
+.home-hero .heart,.hero .heart,.hero-card .heart,.section-hero .heart,.premium-hero .heart,.heart-decoration,.floating-heart,.decor-heart,.hero-heart,.premium-heart{display:none!important}
