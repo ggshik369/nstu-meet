@@ -134,3 +134,5 @@ input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e
 .navbar .btn-outline-light,.navbar .refresh-site{background:#0c0b12!important;border:2px solid #49366f!important;color:#fff!important}
 .navbar .btn-light{background:#15121c!important;border:2px solid #49366f!important;color:#fff!important}
 .navbar .navbar-nav .nav-link.active,.navbar .navbar-nav .show>.nav-link{color:#fff!important;background:#17121f!important}
+
+.support-wrap{display:flex;justify-content:center;margin:0 auto 16px}.support-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:999px;border:2px solid #49366f;background:#111018;color:#fff!important;text-decoration:none!important;font-weight:700;transition:background .2s,border-color .2s,transform .2s}.support-button:hover{background:#21172f;border-color:#8b6be0;transform:translateY(-2px);color:#fff!important}
