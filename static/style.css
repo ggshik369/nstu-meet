@@ -18,3 +18,25 @@ body{background:linear-gradient(180deg,#fff 0%,#f8f9ff 50%,#fff 100%);color:var(
 .pill,.match-chip,.price-tag{background:#eef0ff!important;color:#4f5fce!important}.section-hero{animation:nmFadeUp .5s ease both}.avatar{background:linear-gradient(135deg,#e8ecff,#f5eaff)!important;color:#5868c9!important}
 @keyframes nmFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+
+/* Accessibility, pill-shaped UI and mobile polish */
+:root{--radius-pill:999px;--focus-ring:0 0 0 .22rem rgba(161,138,255,.32)}
+.btn,.nav-link,.form-control,.form-select,.alert,.tag,.chat-list-item,.photo-tile img,.person-photo-wide,.market-photo{border-radius:var(--radius-pill)!important}
+.person-card,.panel,.profile-side,.chat-shell,.premium-hero,.empty-state,.section-hero,.form-shell,.feature,.hero-card{border-radius:34px!important}
+.btn{min-height:44px;padding-inline:20px}
+.btn:focus-visible,.nav-link:focus-visible,.form-control:focus-visible,.form-select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;box-shadow:var(--focus-ring)!important}
+.navbar-toggler{border:1px solid rgba(255,255,255,.5)!important;border-radius:var(--radius-pill)!important;padding:9px 12px!important;min-width:46px;min-height:42px}
+.navbar-toggler-icon{filter:brightness(0) invert(1);opacity:1}
+.refresh-site{white-space:nowrap;border-color:rgba(255,255,255,.45)!important;color:#fff!important;background:rgba(255,255,255,.08)!important}
+.refresh-site:hover{background:rgba(255,255,255,.16)!important;color:#fff!important}
+.footer-link{color:var(--cyan);text-decoration:none}.footer-link:hover{color:var(--pink);text-decoration:underline}
+.form-control,.form-select{min-height:48px;padding:13px 18px}
+.form-check-input{width:1.2em;height:1.2em;margin-top:.2em}
+.form-check-label{line-height:1.55}
+.photo-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px}
+.photo-tile img{height:150px;border-radius:24px!important}
+.person-photo-wide{height:clamp(220px,32vw,360px);border-radius:28px!important}
+.person-photo{border-radius:50%!important}
+@media(max-width:1199.98px){.navbar .container{flex-wrap:wrap}.navbar-collapse{flex-basis:100%;order:3}.navbar-nav{align-items:stretch!important;padding-top:12px}.navbar-nav .nav-link{padding:12px 16px!important}.navbar-nav .btn{margin:8px 0}.navbar-toggler{display:inline-flex;align-items:center;justify-content:center}}
+@media(max-width:575.98px){.container{padding-left:16px;padding-right:16px}.person-card,.panel,.profile-side,.section-hero,.empty-state,.form-shell{border-radius:26px!important}.chat-compose{align-items:stretch}.chat-compose .btn{padding-inline:14px}.refresh-site{padding-inline:12px!important}.photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.photo-tile img{height:clamp(120px,42vw,190px)}}
