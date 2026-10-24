@@ -107,3 +107,20 @@ main h1,main h2,main h3,main h4,main h5,main h6,main p,main li,main label,main .
 .form-control::placeholder,textarea::placeholder{color:#c7c0d7!important}.form-select option{color:#fff!important;background:#111018!important}
 .nav-gradient,.navbar{background:#08080d!important;border-bottom:2px solid #49366f!important}.nav-link{color:#fff!important}
 @media(max-width:767.98px){.feature-icon{width:50px;height:50px;min-width:50px}.hero,.feature,.section-hero{border-radius:22px!important}}
+
+/* Final typography hierarchy: white text, outline only on primary surfaces */
+:root{--ink:#fff!important;--muted:#fff!important;--line:rgba(151,112,255,.58)!important}
+body,body *{color:#fff}
+.navbar-brand,.navbar-brand:hover,.brand-light,.brand-orb{color:#fff!important}
+.navbar-brand{font-weight:800!important;letter-spacing:-.04em}.brand-orb{background:#171020!important;border:1px solid #5d438a!important}
+/* Keep the stronger violet outline on major cards and controls only */
+.hero,.hero-card,.feature,.section-hero,.panel,.form-shell,.profile-side,.person-card,.chat-shell,.premium-hero,.empty-state,.content-card{border:2px solid #49366f!important;border-radius:26px!important}
+/* Small labels, chips, captions and helper text should never have pill borders */
+.pill,.eyebrow,.match-chip,.badge,.small,.text-secondary,.text-muted,small,.form-text,.nav-link,.footer-link{border:0!important;outline:0!important;box-shadow:none!important}
+.pill,.eyebrow,.match-chip{background:transparent!important;padding:0!important;border-radius:0!important}
+.feature-icon,.avatar{overflow:hidden!important;clip-path:circle(50% at 50% 50%);border:2px solid #49366f!important;line-height:1;display:grid;place-items:center}
+main p,main li,main label,main h1,main h2,main h3,main h4,main h5,main h6,main span,main a,main small,main .text-secondary,main .text-muted{color:#fff!important}
+input,textarea,select,.form-control,.form-select{color:#fff!important;background:#101016!important;border:2px solid #49366f!important}
+input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e4!important}
+.btn-outline-dark,.btn-outline-light,.btn-outline-secondary{color:#fff!important;background:#0b0a10!important;border:2px solid #49366f!important}
+.navbar,.nav-gradient{background:#08080d!important;border-bottom:2px solid #49366f!important}
