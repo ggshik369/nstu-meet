@@ -136,3 +136,8 @@ input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e
 .navbar .navbar-nav .nav-link.active,.navbar .navbar-nav .show>.nav-link{color:#fff!important;background:#17121f!important}
 
 .support-wrap{display:flex;justify-content:center;margin:0 auto 16px}.support-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:999px;border:2px solid #49366f;background:#111018;color:#fff!important;text-decoration:none!important;font-weight:700;transition:background .2s,border-color .2s,transform .2s}.support-button:hover{background:#21172f;border-color:#8b6be0;transform:translateY(-2px);color:#fff!important}
+
+/* Homepage emoji icons: remove rings and frames; keep only clipped emoji */
+.feature-icon,.feature .feature-icon,.feature-card .feature-icon,.feature-emoji,.benefit-icon,.emoji-icon{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;clip-path:none!important;width:54px;height:54px;min-width:54px;overflow:visible!important;display:grid;place-items:center}
+.feature-icon::before,.feature-icon::after,.feature-emoji::before,.feature-emoji::after{content:none!important;display:none!important}
+.support-button{color:#fff!important}
