@@ -146,3 +146,11 @@ input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e
 .feature-icon,.feature .feature-icon,.feature-card .feature-icon,.feature-emoji,.benefit-icon,.emoji-icon{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;border-radius:0!important;clip-path:none!important}
 /* Remove the decorative purple heart from the homepage hero/premium wave */
 .home-hero .heart,.hero .heart,.hero-card .heart,.section-hero .heart,.premium-hero .heart,.heart-decoration,.floating-heart,.decor-heart,.hero-heart,.premium-heart{display:none!important}
+
+/* Mobile checkbox tap-target fix (registration and other forms) */
+.form-check{position:relative!important;display:flex!important;align-items:flex-start!important;gap:12px!important;padding-left:0!important;min-height:44px;z-index:2}
+.form-check .form-check-input[type=checkbox],.form-check-input[type=checkbox]{position:relative!important;float:none!important;flex:0 0 24px!important;width:24px!important;height:24px!important;min-width:24px!important;margin:2px 0 0!important;opacity:1!important;display:block!important;appearance:auto!important;-webkit-appearance:checkbox!important;pointer-events:auto!important;cursor:pointer!important;accent-color:#9b7bff;z-index:3;touch-action:manipulation}
+.form-check .form-check-label{position:relative!important;flex:1 1 auto!important;margin:0!important;padding:0!important;display:block!important;pointer-events:auto!important;cursor:pointer!important;line-height:1.5!important;z-index:3}
+.form-check-input[type=checkbox]:checked{background-color:#9b7bff!important;border-color:#9b7bff!important}
+.form-check input[type=checkbox]::before,.form-check input[type=checkbox]::after{pointer-events:none!important}
+@media(max-width:767.98px){.form-check{gap:14px!important;margin-bottom:18px!important}.form-check .form-check-input[type=checkbox]{width:26px!important;height:26px!important;flex-basis:26px!important}.form-check-label{padding-top:2px!important}}
