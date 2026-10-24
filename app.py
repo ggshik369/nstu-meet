@@ -271,10 +271,11 @@ def register():
         elif len(password)<8: flash('Пароль должен содержать минимум 8 символов.','danger')
         elif not name or len(name)>50 or not 18<=age<=100: flash('Укажи имя и возраст от 18 лет.','danger')
         elif country not in COUNTRIES: flash('Выбери страну из списка.','danger')
+        elif not course or course not in COURSES or not faculty or faculty not in FACULTIES: flash('Обязательно выбери курс и факультет.','danger')
         elif request.form.get('responsibility_ack') != 'yes': flash('Подтверди ответственность за свои действия на сайте.','warning')
         else:
             try:
-                user=User(username=username,password_hash=generate_password_hash(password),display_name=name,age=age,faculty='',course=course[:30],country=country,university='НГТУ',university_honest=True)
+                user=User(username=username,password_hash=generate_password_hash(password),display_name=name,age=age,faculty=faculty,course=course[:30],country=country,university='НГТУ',university_honest=True)
                 db.session.add(user); db.session.commit(); session.clear(); session.permanent=True; session['user_id']=user.id
                 flash('Аккаунт создан! Заполни анкету.','success'); return redirect(url_for('profile'))
             except IntegrityError: db.session.rollback(); flash('Такой логин уже занят.','danger')
