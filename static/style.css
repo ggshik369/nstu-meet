@@ -124,3 +124,13 @@ input,textarea,select,.form-control,.form-select{color:#fff!important;background
 input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e4!important}
 .btn-outline-dark,.btn-outline-light,.btn-outline-secondary{color:#fff!important;background:#0b0a10!important;border:2px solid #49366f!important}
 .navbar,.nav-gradient{background:#08080d!important;border-bottom:2px solid #49366f!important}
+
+/* Navbar contrast fix: readable white navigation in every state */
+.navbar .navbar-brand,.navbar .navbar-brand span,.navbar .nav-link,.navbar .nav-link:visited,.navbar .nav-link:hover,.navbar .navbar-nav a,.navbar .premium-link,.navbar .refresh-site,.navbar .btn,.navbar form button{color:#fff!important;opacity:1!important}
+.navbar .nav-link{font-weight:600!important;text-shadow:0 1px 2px rgba(0,0,0,.45)}
+.navbar .nav-link:hover{background:#17121f!important;color:#fff!important}
+.navbar .navbar-brand{color:#fff!important}.navbar .brand-light{color:#fff!important}
+.navbar .navbar-toggler{border:2px solid #49366f!important;background:#111018!important}.navbar .navbar-toggler-icon{filter:brightness(0) invert(1)!important}
+.navbar .btn-outline-light,.navbar .refresh-site{background:#0c0b12!important;border:2px solid #49366f!important;color:#fff!important}
+.navbar .btn-light{background:#15121c!important;border:2px solid #49366f!important;color:#fff!important}
+.navbar .navbar-nav .nav-link.active,.navbar .navbar-nav .show>.nav-link{color:#fff!important;background:#17121f!important}
