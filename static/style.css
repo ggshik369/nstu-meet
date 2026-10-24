@@ -75,3 +75,18 @@ main,footer,.container{--bs-body-color:#f7f5ff} .card,.modal-content,.dropdown-m
 @keyframes violet-glow{0%,100%{box-shadow:0 0 0 rgba(140,106,255,0)}50%{box-shadow:0 0 22px rgba(140,106,255,.13)}}
 .chat-shell{animation:violet-glow 7s ease-in-out infinite}.btn,.person-card,.panel,.chat-list-item{transition:background-color .2s ease,border-color .2s ease,transform .2s ease,box-shadow .2s ease}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Consistent dark theme: override every light hero/card/feature surface */
+html,body{background-color:#08080d!important;color:#f7f5ff!important}
+.hero,.hero-card,.hero-visual,.feature-card,.feature,.section-hero,.premium-hero,.form-shell,.panel,.profile-side,.person-card,.empty-state,.stat-card,.info-card,.glass-card,.content-card,.lecture-card,.listing-card,.group-card,.match-card,.like-card,.profile-card,.auth-card,.welcome-card,.feature-grid>*,.features-grid>*{background:#111118!important;background-image:none!important;color:#f7f5ff!important;border:1px solid #30283f!important;box-shadow:0 12px 34px rgba(0,0,0,.35)!important}
+[class*="hero"],[class*="feature"],[class*="card"],[class*="panel"],[class*="shell"]{color:#f7f5ff}
+[class*="hero"] h1,[class*="hero"] h2,[class*="hero"] h3,[class*="card"] h1,[class*="card"] h2,[class*="card"] h3,.section-hero h1,.premium-hero h1{color:#fff!important}
+[class*="hero"] p,[class*="feature"] p,[class*="card"] p,.section-hero p,.premium-hero p{color:#d2cde3!important}
+.hero .text-muted,.hero .text-secondary,.hero-card .text-muted,.feature-card .text-muted{color:#b7b0cd!important}
+/* Bootstrap utility classes were leaving pale surfaces and dark text behind */
+.bg-white,.bg-light,.text-dark{background-color:#111118!important;color:#f7f5ff!important}
+.border,.border-light{border-color:#30283f!important}
+.navbar{background:#111118!important}.nav-gradient{background:rgba(12,11,18,.97)!important}
+.btn-secondary,.btn-outline-secondary{background:#17151f!important;color:#f7f5ff!important;border-color:#514269!important}
+/* Homepage hero must not be a white slab */
+.home-hero,.landing-hero,.hero-section,.hero-banner{background:#111118!important;background-image:radial-gradient(ellipse at 90% 10%,rgba(124,83,255,.16),transparent 45%)!important;color:#f7f5ff!important;border:1px solid #30283f!important}
