@@ -1,4 +1,4 @@
-import os, secrets, hashlib, hmac, mimetypes, uuid
+import os, secrets, hashlib, hmac, mimetypes, uuid, json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode
@@ -9,6 +9,17 @@ from sqlalchemy import or_, and_, func, UniqueConstraint
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
+
+try:
+    import cloudinary
+    import cloudinary.uploader
+except ImportError:
+    cloudinary = None
+try:
+    from pywebpush import webpush, WebPushException
+except ImportError:
+    webpush = None
+    WebPushException = Exception
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY') or secrets.token_hex(32)
@@ -57,6 +68,10 @@ PREMIUM_DAYS = 30
 YOOMONEY_RECEIVER = os.getenv('YOOMONEY_RECEIVER', '').strip()
 YOOMONEY_NOTIFICATION_SECRET = os.getenv('YOOMONEY_NOTIFICATION_SECRET', '').strip()
 PUBLIC_BASE_URL = os.getenv('PUBLIC_BASE_URL', '').rstrip('/')
+CLOUDINARY_URL = os.getenv('CLOUDINARY_URL', '').strip()
+VAPID_PUBLIC_KEY = os.getenv('VAPID_PUBLIC_KEY', '').strip()
+VAPID_PRIVATE_KEY = os.getenv('VAPID_PRIVATE_KEY', '').strip()
+VAPID_CLAIMS_EMAIL = os.getenv('VAPID_CLAIMS_EMAIL', 'mailto:support@nstu-meet.onrender.com').strip()
 
 # Compatibility helper for templates that use row['field'] syntax.
 class ItemAccessMixin:
@@ -133,6 +148,14 @@ class Payment(ItemAccessMixin, db.Model):
     amount = db.Column(db.Integer, nullable=False, default=PREMIUM_PRICE)
     status = db.Column(db.String(30), nullable=False, default='pending')
     operation_id = db.Column(db.String(100))
+    created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+
+class PushSubscription(db.Model):
+    __tablename__ = 'push_subscriptions'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False, index=True)
+    endpoint = db.Column(db.Text, nullable=False, unique=True)
+    subscription_json = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
 
 class ProfilePhoto(ItemAccessMixin, db.Model):
@@ -248,6 +271,16 @@ def save_upload(file, allowed, max_bytes=30*1024*1024):
     original = secure_filename(file.filename)
     ext = original.rsplit('.',1)[1].lower()
     if ext not in allowed: return None
+    # Cloudinary is persistent storage; local uploads are only a fallback for development.
+    if CLOUDINARY_URL and cloudinary:
+        try:
+            file.stream.seek(0, 2); size = file.stream.tell(); file.stream.seek(0)
+            if size > max_bytes: return None
+            result = cloudinary.uploader.upload(file, resource_type='auto', folder='nstu-meet', public_id=secrets.token_hex(18), overwrite=False, use_filename=False, unique_filename=False)
+            return result.get('secure_url')
+        except Exception:
+            app.logger.exception('Cloudinary upload failed')
+            return None
     name = secrets.token_hex(18) + '.' + ext
     target = UPLOAD_DIR / name
     file.save(target)
@@ -349,7 +382,9 @@ def chat(other_id):
     if not other or other.id==me.id or not can_chat(me.id,other_id): flash('Чат открывается после взаимного лайка или обращения по объявлению.','warning'); return redirect(url_for('matches'))
     if request.method=='POST':
         body=request.form.get('body','').strip()
-        if body and len(body)<=1000: db.session.add(Message(sender_id=me.id,receiver_id=other_id,body=body)); db.session.commit()
+        if body and len(body)<=1000:
+            db.session.add(Message(sender_id=me.id,receiver_id=other_id,body=body)); db.session.commit()
+            send_push_to_user(other_id, 'Новое сообщение', f'{me.display_name}: {body[:100]}', url_for('chat', other_id=me.id))
         elif body: flash('Сообщение слишком длинное.','warning')
         return redirect(url_for('chat',other_id=other_id))
     msgs=[]
@@ -363,7 +398,9 @@ def chat(other_id):
 @app.route('/uploads/<path:filename>')
 @login_required
 def uploaded_file(filename):
-    # Only serve known uploaded file names; no path traversal outside UPLOAD_DIR.
+    # Cloudinary URLs are stored directly in the database; local names use the Render upload folder.
+    if filename.startswith('https://') or filename.startswith('http://'):
+        return redirect(filename)
     return send_from_directory(UPLOAD_DIR, filename, as_attachment=False, conditional=True)
 
 @app.route('/profile/photos',methods=['POST'])
@@ -630,6 +667,46 @@ def yoomoney_notify():
 @login_required
 def premium_return():
     flash('Спасибо! Premium активируется после подтверждения платежа платёжным сервисом. Обычная оплата через кошелёк не означает автоматического ежемесячного списания.','info'); return redirect(url_for('premium'))
+def send_push_to_user(user_id, title, body, path='/chats'):
+    if not (webpush and VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY): return
+    for row in PushSubscription.query.filter_by(user_id=user_id).all():
+        try:
+            webpush(subscription_info=json.loads(row.subscription_json), data=json.dumps({'title': title, 'body': body, 'url': path}), vapid_private_key=VAPID_PRIVATE_KEY, vapid_claims={'sub': VAPID_CLAIMS_EMAIL})
+        except WebPushException as exc:
+            status = getattr(getattr(exc, 'response', None), 'status_code', None)
+            if status in (404, 410): db.session.delete(row)
+        except Exception:
+            app.logger.exception('Push notification failed')
+    db.session.commit()
+
+@app.route('/api/push/public-key')
+@login_required
+def push_public_key():
+    if not VAPID_PUBLIC_KEY: return jsonify(error='push_not_configured'), 503
+    return jsonify(publicKey=VAPID_PUBLIC_KEY)
+
+@app.route('/api/push/subscribe', methods=['POST'])
+@login_required
+def push_subscribe():
+    if not (webpush and VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY): return jsonify(error='push_not_configured'), 503
+    payload=request.get_json(silent=True) or {}
+    if not payload.get('endpoint') or not payload.get('keys'): return jsonify(error='invalid_subscription'), 400
+    row=PushSubscription.query.filter_by(endpoint=payload['endpoint']).first()
+    if row:
+        row.user_id=get_user().id; row.subscription_json=json.dumps(payload)
+    else:
+        db.session.add(PushSubscription(user_id=get_user().id, endpoint=payload['endpoint'], subscription_json=json.dumps(payload)))
+    db.session.commit()
+    return jsonify(ok=True)
+
+@app.route('/api/push/unsubscribe', methods=['POST'])
+@login_required
+def push_unsubscribe():
+    payload=request.get_json(silent=True) or {}; endpoint=payload.get('endpoint')
+    if endpoint:
+        PushSubscription.query.filter_by(user_id=get_user().id, endpoint=endpoint).delete(); db.session.commit()
+    return jsonify(ok=True)
+
 @app.route('/settings/delete',methods=['POST'])
 @login_required
 def delete_account():
