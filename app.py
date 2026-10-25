@@ -302,33 +302,13 @@ def index():
 
 @app.route('/register', methods=['GET','POST'])
 def register():
-    if request.method == 'POST':
-        username=request.form.get('username','').strip().lower(); password=request.form.get('password',''); name=request.form.get('display_name','').strip()
-        try: age=int(request.form.get('age','0'))
-        except ValueError: age=0
-        country=request.form.get('country','Россия').strip(); faculty=request.form.get('faculty','').strip(); course=request.form.get('course','').strip()
-        if len(username)<3 or len(username)>40 or not username.replace('_','').replace('.','').isalnum(): flash('Логин: 3–40 символов, латиница, цифры, точка или подчёркивание.','danger')
-        elif len(password)<8: flash('Пароль должен содержать минимум 8 символов.','danger')
-        elif not name or len(name)>50 or not 18<=age<=100: flash('Укажи имя и возраст от 18 лет.','danger')
-        elif country not in COUNTRIES: flash('Выбери страну из списка.','danger')
-        elif not course or course not in COURSES or not faculty or faculty not in FACULTIES: flash('Обязательно выбери курс и факультет.','danger')
-        elif request.form.get('responsibility_ack') != 'yes': flash('Подтверди ответственность за свои действия на сайте.','warning')
-        else:
-            try:
-                user=User(username=username,password_hash=generate_password_hash(password),display_name=name,age=age,faculty=faculty,course=course[:30],country=country,university='НГТУ',university_honest=True)
-                db.session.add(user); db.session.commit(); session.clear(); session.permanent=True; session['user_id']=user.id
-                flash('Аккаунт создан! Заполни анкету.','success'); return redirect(url_for('profile'))
-            except IntegrityError: db.session.rollback(); flash('Такой логин уже занят.','danger')
-    return render_template('register.html', countries=COUNTRIES, country_flags=COUNTRY_FLAGS, universities=UNIVERSITIES, faculties=FACULTIES, courses=COURSES)
+    # New accounts are created only after successful Yandex OAuth.
+    flash('Создание аккаунта доступно только через кнопку «Войти через Яндекс».', 'info')
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    if request.method=='POST':
-        username=request.form.get('username','').strip().lower(); password=request.form.get('password','')
-        user=User.query.filter_by(username=username,is_active=True).first()
-        if user and check_password_hash(user.password_hash,password):
-            session.clear(); session.permanent=True; session['user_id']=user.id; return redirect(url_for('discover'))
-        flash('Неверный логин или пароль. Проверь раскладку клавиатуры и логин.','danger')
+    # Password-based login is disabled to keep the requested Yandex-only flow.
     return render_template('login.html')
 
 YANDEX_CLIENT_ID = os.getenv('YANDEX_CLIENT_ID', '').strip()
