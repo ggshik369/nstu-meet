@@ -417,7 +417,15 @@ def upload_profile_photos():
 def delete_profile_photo(photo_id):
     p=ProfilePhoto.query.filter_by(id=photo_id,user_id=get_user().id).first()
     if p:
-        (UPLOAD_DIR/p.filename).unlink(missing_ok=True); db.session.delete(p); db.session.commit()
+        if p.filename.startswith('http'):
+            if cloudinary and CLOUDINARY_URL:
+                try:
+                    public_id='nstu-meet/'+p.filename.split('/nstu-meet/')[-1].rsplit('.',1)[0]
+                    cloudinary.uploader.destroy(public_id, resource_type='image', invalidate=True)
+                except Exception: app.logger.exception('Cloudinary delete failed')
+        else:
+            (UPLOAD_DIR/p.filename).unlink(missing_ok=True)
+        db.session.delete(p); db.session.commit()
     return redirect(url_for('profile'))
 
 @app.route('/likes/sent')
@@ -606,6 +614,7 @@ def lecture_download(lecture_id):
     if not l: abort(404)
     if not premium_active(get_user()) and l.subject not in [x[0] for x in db.session.query(LectureAccess.subject).filter_by(user_id=get_user().id).all()]:
         flash('Выбери предмет в разделе лекций или подключи Premium.','warning'); return redirect(url_for('lectures'))
+    if l.filename.startswith('https://') or l.filename.startswith('http://'): return redirect(l.filename)
     return send_from_directory(UPLOAD_DIR,l.filename,as_attachment=True,download_name=l.original_filename)
 @app.route('/lectures/<int:lecture_id>/delete',methods=['POST'])
 @login_required
