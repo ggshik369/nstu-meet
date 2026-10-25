@@ -1,0 +1,48 @@
+/* Compact mobile layout only. Desktop styling remains unchanged. */
+@media (max-width: 767.98px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-size: 14px !important; line-height: 1.42 !important; }
+  main.container { padding: 12px 12px 20px !important; }
+  .container { --bs-gutter-x: .75rem; min-width: 0; }
+  main h1 { font-size: 1.45rem !important; line-height: 1.2 !important; margin-bottom: .65rem !important; }
+  main h2 { font-size: 1.2rem !important; line-height: 1.25 !important; }
+  main h3 { font-size: 1.05rem !important; line-height: 1.25 !important; }
+  main h4, main h5, main h6 { font-size: .95rem !important; }
+  main p, main li, main label, main .lead { font-size: .88rem !important; }
+  main .small, main small, footer { font-size: .74rem !important; }
+  .btn, main .btn { min-height: 36px !important; padding: 7px 11px !important; font-size: .82rem !important; line-height: 1.25 !important; }
+  .form-control, .form-select, textarea, input:not([type=checkbox]):not([type=radio]):not([type=file]) { min-height: 39px !important; padding: 8px 11px !important; font-size: .86rem !important; border-radius: 12px !important; }
+  .navbar { padding-block: 5px !important; }
+  .navbar .container { gap: 5px; }
+  .navbar-brand { font-size: 1rem !important; margin-right: 0 !important; }
+  .navbar .nav-link { padding: 8px 10px !important; font-size: .83rem !important; }
+  .navbar-toggler { min-width: 38px !important; min-height: 36px !important; padding: 5px 9px !important; }
+  .refresh-site { padding: 6px 9px !important; font-size: .78rem !important; }
+  .hero,.hero-card,.feature,.section-hero,.panel,.form-shell,.profile-side,.person-card,.chat-shell,.premium-hero,.empty-state,.content-card,.card,.feature-card,.lecture-card,.listing-card,.group-card,.match-card,.like-card,.profile-card,.auth-card,.welcome-card { border-radius: 17px !important; }
+  .hero,.hero-card,.feature,.section-hero,.panel,.form-shell,.profile-side,.person-card,.premium-hero,.empty-state,.card { padding: 12px !important; }
+  .row { --bs-gutter-x: .65rem; --bs-gutter-y: .65rem; }
+  .g-4,.gy-4 { --bs-gutter-y: .75rem !important; }
+  .g-4,.gx-4 { --bs-gutter-x: .75rem !important; }
+  .gap-4 { gap: .7rem !important; } .gap-3 { gap: .55rem !important; }
+  .mb-5 { margin-bottom: 1.2rem !important; } .mt-5 { margin-top: 1.2rem !important; }
+  .py-5 { padding-top: 1.1rem !important; padding-bottom: 1.1rem !important; }
+  .photo-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 8px !important; }
+  .photo-tile img { height: clamp(105px,34vw,150px) !important; }
+  .person-photo-wide { height: clamp(170px,52vw,260px) !important; }
+  .avatar-xl { width: 58px !important; height: 58px !important; min-width: 58px !important; font-size: 1.5rem !important; }
+  .feature-icon,.feature-emoji,.benefit-icon,.emoji-icon { width: 38px !important; height: 38px !important; min-width: 38px !important; font-size: 1.3rem !important; margin-bottom: 7px !important; }
+  .chat-shell { padding: 0 !important; } .chat-header { padding: 10px 12px !important; }
+  .messages { min-height: 220px !important; height: 54vh !important; padding: 12px !important; gap: 8px !important; }
+  .message { padding: 9px 11px !important; border-radius: 15px !important; font-size: .86rem !important; }
+  .message-row { max-width: 96% !important; } .chat-compose { gap: 6px !important; padding: 9px !important; }
+  .chat-compose .form-control { padding: 8px 10px !important; min-width: 0 !important; }
+  .chat-compose .btn { min-height: 38px !important; padding: 7px 9px !important; }
+  .chat-list-item { padding: 10px !important; gap: 9px !important; border-radius: 15px !important; }
+  .support-button { padding: 8px 12px !important; font-size: .8rem !important; }
+  img, video, iframe, canvas, svg { max-width: 100%; }
+  .container, main, section, article, .card, .panel, .row > *, .d-flex > * { min-width: 0; }
+  main, main * { overflow-wrap: anywhere; }
+  pre, code { white-space: pre-wrap; word-break: break-word; }
+  table { display: block; max-width: 100%; overflow-x: auto; }
+  input[type=file].form-control { font-size: .75rem !important; padding: 6px !important; }
+}
