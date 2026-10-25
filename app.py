@@ -101,6 +101,13 @@ class User(ItemAccessMixin, db.Model):
         p = ProfilePhoto.query.filter_by(user_id=self.id).order_by(ProfilePhoto.id.desc()).first()
         return p.filename if p else None
 
+class YandexIdentity(db.Model):
+    __tablename__ = 'yandex_identities'
+    id = db.Column(db.Integer, primary_key=True)
+    yandex_uid = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), nullable=False)
+
 class Like(db.Model):
     __tablename__ = 'likes'
     id = db.Column(db.Integer, primary_key=True)
@@ -323,6 +330,72 @@ def login():
             session.clear(); session.permanent=True; session['user_id']=user.id; return redirect(url_for('discover'))
         flash('Неверный логин или пароль. Проверь раскладку клавиатуры и логин.','danger')
     return render_template('login.html')
+
+YANDEX_CLIENT_ID = os.getenv('YANDEX_CLIENT_ID', '').strip()
+YANDEX_CLIENT_SECRET = os.getenv('YANDEX_CLIENT_SECRET', '').strip()
+YANDEX_REDIRECT_URI = os.getenv('YANDEX_REDIRECT_URI', 'https://nstu-meet.onrender.com/auth/yandex/callback').strip()
+
+@app.route('/auth/yandex')
+def yandex_login():
+    if not YANDEX_CLIENT_ID:
+        flash('Вход через Яндекс пока не настроен. Попробуй позже.', 'warning')
+        return redirect(url_for('login'))
+    state = secrets.token_urlsafe(32)
+    session['yandex_oauth_state'] = state
+    params = {'response_type':'code','client_id':YANDEX_CLIENT_ID,'redirect_uri':YANDEX_REDIRECT_URI,'state':state}
+    return redirect('https://oauth.yandex.ru/authorize?' + urlencode(params))
+
+@app.route('/auth/yandex/callback')
+def yandex_callback():
+    expected = session.pop('yandex_oauth_state', None)
+    if not expected or not hmac.compare_digest(expected, request.args.get('state','')):
+        flash('Проверка входа не пройдена. Попробуй ещё раз.', 'warning')
+        return redirect(url_for('login'))
+    if request.args.get('error') or not request.args.get('code'):
+        flash('Вход через Яндекс отменён или не одобрен.', 'warning')
+        return redirect(url_for('login'))
+    if not YANDEX_CLIENT_ID or not YANDEX_CLIENT_SECRET:
+        app.logger.error('Yandex OAuth credentials are not configured')
+        flash('Вход через Яндекс ещё не подключён до конца.', 'warning')
+        return redirect(url_for('login'))
+    try:
+        import urllib.request
+        token_data = urlencode({'grant_type':'authorization_code','code':request.args['code'],'client_id':YANDEX_CLIENT_ID,'client_secret':YANDEX_CLIENT_SECRET,'redirect_uri':YANDEX_REDIRECT_URI}).encode()
+        token_req = urllib.request.Request('https://oauth.yandex.ru/token', data=token_data, headers={'Content-Type':'application/x-www-form-urlencoded'}, method='POST')
+        with urllib.request.urlopen(token_req, timeout=12) as response:
+            token_json = json.loads(response.read().decode('utf-8'))
+        access_token = token_json.get('access_token')
+        if not access_token: raise ValueError('No access token returned')
+        info_req = urllib.request.Request('https://login.yandex.ru/info?format=json', headers={'Authorization':'OAuth '+access_token})
+        with urllib.request.urlopen(info_req, timeout=12) as response:
+            info = json.loads(response.read().decode('utf-8'))
+        yandex_uid = str(info.get('id','')).strip()
+        if not yandex_uid: raise ValueError('Yandex account ID missing')
+        identity = YandexIdentity.query.filter_by(yandex_uid=yandex_uid).first()
+        if identity:
+            user = db.session.get(User, identity.user_id)
+            if not user or not user.is_active:
+                flash('Этот аккаунт NSTU Meet неактивен.', 'warning')
+                return redirect(url_for('login'))
+            session.clear(); session.permanent=True; session['user_id']=user.id
+            return redirect(url_for('discover' if user.faculty and user.course and user.country else 'profile'))
+        username = 'ya_' + hashlib.sha256(yandex_uid.encode()).hexdigest()[:30]
+        user = User(username=username, password_hash=generate_password_hash(secrets.token_urlsafe(32)),
+                    display_name='Новый пользователь', age=18, faculty='', course='', country='Россия',
+                    university='НГТУ', university_honest=True)
+        db.session.add(user); db.session.flush()
+        db.session.add(YandexIdentity(yandex_uid=yandex_uid, user_id=user.id))
+        db.session.commit()
+        session.clear(); session.permanent=True; session['user_id']=user.id
+        flash('Вход выполнен! Заполни факультет, курс и страну, чтобы продолжить.', 'success')
+        return redirect(url_for('profile'))
+    except Exception:
+        db.session.rollback()
+        app.logger.exception('Yandex OAuth callback failed')
+        flash('Не удалось войти через Яндекс. Проверь настройки приложения и попробуй ещё раз.', 'danger')
+        return redirect(url_for('login'))
+
+
 @app.route('/logout', methods=['POST'])
 @login_required
 def logout(): session.clear(); return redirect(url_for('index'))
