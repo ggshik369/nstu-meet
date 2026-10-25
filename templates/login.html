@@ -3,6 +3,8 @@
 {% block content %}
 <div class="form-shell">
   <h1 class="h2 fw-bold">С возвращением</h1><p class="text-secondary">Войди, чтобы продолжить знакомиться.</p>
+  <a class="btn btn-dark rounded-pill w-100 py-2 mt-3" href="{{ url_for('yandex_login') }}">Войти через Яндекс</a>
+  <div class="text-center text-secondary my-3">или войди по логину</div>
   <form method="post" class="mt-4">
     <label class="form-label">Логин</label><input class="form-control mb-3" name="username" required autocomplete="username">
     <label class="form-label">Пароль</label><input class="form-control mb-4" type="password" name="password" required autocomplete="current-password">
