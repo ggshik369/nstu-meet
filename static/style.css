@@ -15,7 +15,8 @@ body{background:linear-gradient(180deg,#fff 0%,#f8f9ff 50%,#fff 100%);color:var(
 .btn-primary{background:linear-gradient(135deg,#6477f2,#8069e8)!important;border:0!important;box-shadow:0 8px 18px rgba(93,108,227,.18);transition:transform .2s,box-shadow .2s}.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(93,108,227,.27)}
 .form-control,.form-select{border-color:#e0e4f0;background:#fff;color:var(--nm-ink);border-radius:13px}.form-control:focus,.form-select:focus{border-color:#8996f4;box-shadow:0 0 0 .22rem rgba(100,119,242,.13)}
 .hero{background:radial-gradient(circle at 90% 10%,#e6eaff 0,transparent 34%),linear-gradient(135deg,#fff,#f3f5ff)!important;border:1px solid var(--nm-line);box-shadow:var(--nm-shadow)}
-.pill,.match-chip,.price-tag{background:#eef0ff!important;color:#4f5fce!important}.section-hero{animation:nmFadeUp .5s ease both}.avatar{background:linear-gradient(135deg,#e8ecff,#f5eaff)!important;color:#5868c9!important}
+.pill,.match-chip{background:#eef0ff!important;color:#4f5fce!important}
+.price-tag{background:transparent!important;color:#fff!important;padding:0!important;border:0!important;border-radius:0!important;box-shadow:none!important;font-weight:800!important;white-space:nowrap!important}.section-hero{animation:nmFadeUp .5s ease both}.avatar{background:linear-gradient(135deg,#e8ecff,#f5eaff)!important;color:#5868c9!important}
 @keyframes nmFadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 
