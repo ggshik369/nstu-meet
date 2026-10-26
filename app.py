@@ -90,6 +90,7 @@ class User(ItemAccessMixin, db.Model):
     interests = db.Column(db.String(300), default='', nullable=False)
     about = db.Column(db.String(700), default='', nullable=False)
     looking_for = db.Column(db.String(100), default='Общение и знакомства', nullable=False)
+    mood_status = db.Column(db.String(40), default='🙂 На расслабоне', nullable=False)
     country = db.Column(db.String(80), default='Россия', nullable=False)
     university = db.Column(db.String(80), default='НГТУ', nullable=False)
     university_honest = db.Column(db.Boolean, default=True, nullable=False)
@@ -388,11 +389,13 @@ def profile():
         try: age=int(request.form.get('age','0'))
         except ValueError: age=0
         name=request.form.get('display_name','').strip(); faculty=request.form.get('faculty','').strip(); course=request.form.get('course','').strip(); country=request.form.get('country',user.country).strip()
-        interests=request.form.get('interests','').strip(); about=request.form.get('about','').strip(); looking=request.form.get('looking_for','Общение и знакомства').strip()
+        interests=request.form.get('interests','').strip(); about=request.form.get('about','').strip(); looking=request.form.get('looking_for','Общение и знакомства').strip(); mood=request.form.get('mood_status','🙂 На расслабоне').strip()
         if not name or len(name)>50 or not 18<=age<=100: flash('Проверь имя и возраст.','danger')
         elif country not in COUNTRIES: flash('Выбери страну из списка.','danger')
         else:
-            user.display_name=name; user.age=age; user.faculty=faculty[:100]; user.course=course[:30]; user.country=country; user.university='НГТУ'; user.interests=interests[:300]; user.about=about[:700]; user.looking_for=looking[:100]
+            if mood not in ['😊 В хорошем настроении','🥰 Хочу знакомиться','😎 На своём вайбе','🙂 На расслабоне','🥱 Немного устал(а)','🎧 Слушаю музыку','🤍 Просто общаюсь']:
+                mood='🙂 На расслабоне'
+            user.display_name=name; user.age=age; user.faculty=faculty[:100]; user.course=course[:30]; user.country=country; user.university='НГТУ'; user.interests=interests[:300]; user.about=about[:700]; user.looking_for=looking[:100]; user.mood_status=mood
             db.session.commit(); flash('Анкета сохранена.','success'); return redirect(url_for('profile'))
     photos=ProfilePhoto.query.filter_by(user_id=user.id).order_by(ProfilePhoto.id.desc()).all()
     return render_template('profile.html',user=user,photos=photos,countries=COUNTRIES,country_flags=COUNTRY_FLAGS,universities=UNIVERSITIES,faculties=FACULTIES,courses=COURSES)
@@ -795,6 +798,11 @@ def database_health():
 
 with app.app_context():
     db.create_all()
+    # Add the mood field to existing databases without dropping user data.
+    from sqlalchemy import inspect, text
+    if 'mood_status' not in {column['name'] for column in inspect(db.engine).get_columns('users')}:
+        with db.engine.begin() as connection:
+            connection.execute(text("ALTER TABLE users ADD COLUMN mood_status VARCHAR(40) NOT NULL DEFAULT '🙂 На расслабоне'"))
 
 if __name__=='__main__':
     app.run(host='0.0.0.0',port=int(os.getenv('PORT','5000')),debug=os.getenv('FLASK_DEBUG','0')=='1')
