@@ -160,3 +160,5 @@ input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e
 .mood-status{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:5px 10px;border:1px solid rgba(255,133,189,.25);border-radius:999px;background:linear-gradient(120deg,rgba(161,138,255,.12),rgba(255,133,189,.10));color:#f4eaff;font-size:.76rem;font-weight:700;line-height:1.3;max-width:100%;width:max-content;}
 /* Prefer platform emoji fonts, including Apple's emoji on iPhone and iPad. */
 .emoji,.mood-status,.feature-icon,button,a,summary{font-variant-emoji:emoji;}
+
+.creator-credit{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid rgba(255,133,189,.22);border-radius:999px;background:linear-gradient(110deg,rgba(161,138,255,.12),rgba(255,133,189,.10));color:#d8d2f3;font-size:.88rem;letter-spacing:.01em}.creator-credit strong{color:#ffb5d9;font-weight:800}
