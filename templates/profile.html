@@ -26,6 +26,7 @@
           <div class="col-md-5 mb-3"><label class="form-label">Курс</label><input class="form-control" name="course" value="{{ user['course'] }}" maxlength="30" placeholder="1 курс"></div>
         </div>
         <label class="form-label">Интересы</label><input class="form-control mb-3" name="interests" value="{{ user['interests'] }}" maxlength="300" placeholder="Музыка, игры, спорт, кино...">
+        <label class="form-label">Эмодзи настроения рядом с анкетой</label><select class="form-select mb-3" name="mood_status">{% for mood in ['😊 В хорошем настроении','🥰 Хочу знакомиться','😎 На своём вайбе','🙂 На расслабоне','🥱 Немного устал(а)','🎧 Слушаю музыку','🤍 Просто общаюсь'] %}<option value="{{ mood }}" {% if user['mood_status']==mood %}selected{% endif %}>{{ mood }}</option>{% endfor %}</select>
         <label class="form-label">Кого / что ищешь</label>
         <select class="form-select mb-3" name="looking_for">
           {% for option in ['Общение и знакомства','Серьёзные отношения','Друзей по интересам','Пока не определился(лась)'] %}
