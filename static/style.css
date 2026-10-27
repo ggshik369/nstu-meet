@@ -164,4 +164,3 @@ input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e
 .creator-credit{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid rgba(255,133,189,.22);border-radius:999px;background:linear-gradient(110deg,rgba(161,138,255,.12),rgba(255,133,189,.10));color:#d8d2f3;font-size:.88rem;letter-spacing:.01em}.creator-credit strong{color:#ffb5d9;font-weight:800}
 
 
-.site-notice{position:relative;z-index:1100;text-align:center;padding:15px 16px;margin:0;background:linear-gradient(100deg,#28121c,#15101c,#28121c);border-bottom:2px solid #ff4f88;color:#fff;font-size:clamp(1.1rem,3vw,1.65rem);font-weight:900;letter-spacing:.01em;text-shadow:0 2px 12px rgba(255,79,136,.25)}
