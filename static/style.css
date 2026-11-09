@@ -164,3 +164,42 @@ input::placeholder,textarea::placeholder,.form-control::placeholder{color:#d8d4e
 .creator-credit{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid rgba(255,133,189,.22);border-radius:999px;background:linear-gradient(110deg,rgba(161,138,255,.12),rgba(255,133,189,.10));color:#d8d2f3;font-size:.88rem;letter-spacing:.01em}.creator-credit strong{color:#ffb5d9;font-weight:800}
 
 
+
+
+/* ===== NSTU Meet motion system ===== */
+:root{--motion-fast:180ms;--motion-mid:360ms;--motion-slow:650ms;--motion-ease:cubic-bezier(.2,.75,.25,1)}
+body{overflow-x:hidden}
+body:before{content:"";position:fixed;inset:-25%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 22% 28%,rgba(161,138,255,.10),transparent 24%),radial-gradient(circle at 78% 62%,rgba(255,133,189,.075),transparent 25%);filter:blur(18px);animation:ambient-drift 22s ease-in-out infinite alternate}
+@keyframes ambient-drift{0%{transform:translate3d(-2%, -1%,0) rotate(0deg) scale(1)}100%{transform:translate3d(2%,1.5%,0) rotate(8deg) scale(1.08)}}
+@keyframes page-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes soft-pop{0%{opacity:0;transform:scale(.97) translateY(8px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes orb-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(5deg)}}
+@keyframes shimmer{0%{background-position:120% 0}100%{background-position:-120% 0}}
+main.container{animation:page-enter .55s var(--motion-ease) both}
+.nav-gradient{transition:background var(--motion-mid),box-shadow var(--motion-mid)}
+.nav-gradient:hover{box-shadow:0 12px 38px rgba(0,0,0,.16)}
+.navbar-brand{transition:transform var(--motion-mid) var(--motion-ease)}
+.navbar-brand:hover{transform:translateY(-2px)}
+.brand-orb{animation:orb-float 4s ease-in-out infinite;transition:transform var(--motion-mid),box-shadow var(--motion-mid)}
+.brand-orb:hover{transform:rotate(14deg) scale(1.12);box-shadow:0 0 24px rgba(255,133,189,.35)}
+a,button,.btn,.nav-link,.support-button{transition:color var(--motion-fast),background-color var(--motion-fast),border-color var(--motion-fast),box-shadow var(--motion-mid),transform var(--motion-mid) var(--motion-ease),filter var(--motion-mid)}
+.btn:hover,button:hover,.support-button:hover{transform:translateY(-2px);filter:brightness(1.08);box-shadow:0 10px 26px rgba(161,138,255,.18)}
+.btn:active,button:active{transform:translateY(0) scale(.97)}
+.nav-link{position:relative}
+.nav-link:after{content:"";position:absolute;left:12px;right:12px;bottom:3px;height:2px;border-radius:9px;background:linear-gradient(90deg,var(--purple),var(--pink));transform:scaleX(0);transform-origin:left;transition:transform var(--motion-mid) var(--motion-ease)}
+.nav-link:hover:after,.nav-link.active:after{transform:scaleX(1)}
+.card,.form-shell,.profile-card,.listing-card,.market-card,.group-card,.chat-card,.feature-card,.glass-card,.stat-card,.match-card,.list-group-item{transition:transform var(--motion-mid) var(--motion-ease),border-color var(--motion-mid),box-shadow var(--motion-mid),background-color var(--motion-mid)}
+.card:hover,.profile-card:hover,.listing-card:hover,.market-card:hover,.group-card:hover,.chat-card:hover,.feature-card:hover,.glass-card:hover,.stat-card:hover,.match-card:hover{transform:translateY(-5px);border-color:rgba(255,133,189,.28);box-shadow:0 18px 42px rgba(0,0,0,.22),0 0 0 1px rgba(161,138,255,.05)}
+img{transition:transform .55s var(--motion-ease),filter .45s}
+.profile-card:hover img,.listing-card:hover img,.market-card:hover img{transform:scale(1.025)}
+input,textarea,select,.form-control,.form-select{transition:border-color var(--motion-fast),box-shadow var(--motion-mid),background-color var(--motion-mid)}
+input:focus,textarea:focus,select:focus,.form-control:focus,.form-select:focus{box-shadow:0 0 0 .22rem rgba(161,138,255,.16),0 0 22px rgba(161,138,255,.09)!important}
+.badge,.premium-link{transition:transform var(--motion-mid),filter var(--motion-mid)}
+.badge:hover,.premium-link:hover{transform:translateY(-2px) scale(1.04);filter:brightness(1.12)}
+hr{border-color:rgba(255,255,255,.12)}
+.motion-reveal{opacity:0;transform:translateY(18px) scale(.985);transition:opacity .65s var(--motion-ease),transform .65s var(--motion-ease)}
+.motion-reveal.is-visible{opacity:1;transform:translateY(0) scale(1)}
+.motion-reveal.motion-delay-1{transition-delay:70ms}.motion-reveal.motion-delay-2{transition-delay:130ms}.motion-reveal.motion-delay-3{transition-delay:190ms}.motion-reveal.motion-delay-4{transition-delay:250ms}
+@media(hover:none){.card:hover,.profile-card:hover,.listing-card:hover,.market-card:hover,.group-card:hover,.chat-card:hover,.feature-card:hover,.glass-card:hover,.stat-card:hover,.match-card:hover{transform:none;box-shadow:none}.btn:hover,button:hover{transform:none}}
+@media(max-width:767.98px){body:before{animation-duration:30s}.motion-reveal{transform:translateY(10px)}.card:hover,.profile-card:hover,.listing-card:hover,.market-card:hover,.group-card:hover,.chat-card:hover,.feature-card:hover,.glass-card:hover,.stat-card:hover,.match-card:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}.motion-reveal{opacity:1;transform:none}}
