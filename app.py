@@ -906,6 +906,45 @@ def admin_group_delete(group_id):
         db.session.delete(row); db.session.commit()
     return redirect(url_for('admin_panel') + '#groups')
 
+
+@app.route('/admin/chats')
+@owner_required
+def admin_chats():
+    pairs = set()
+    for sender_id, receiver_id in db.session.query(Message.sender_id, Message.receiver_id).distinct().all():
+        pairs.add(tuple(sorted((sender_id, receiver_id))))
+    for sender_id, receiver_id in db.session.query(ChatMedia.sender_id, ChatMedia.receiver_id).distinct().all():
+        pairs.add(tuple(sorted((sender_id, receiver_id))))
+    conversations = []
+    for a_id, b_id in pairs:
+        a, b = db.session.get(User, a_id), db.session.get(User, b_id)
+        if not a or not b:
+            continue
+        pair_filter = or_(and_(Message.sender_id==a_id, Message.receiver_id==b_id), and_(Message.sender_id==b_id, Message.receiver_id==a_id))
+        media_filter = or_(and_(ChatMedia.sender_id==a_id, ChatMedia.receiver_id==b_id), and_(ChatMedia.sender_id==b_id, ChatMedia.receiver_id==a_id))
+        latest_text = Message.query.filter(pair_filter).order_by(Message.created_at.desc(), Message.id.desc()).first()
+        latest_media = ChatMedia.query.filter(media_filter).order_by(ChatMedia.created_at.desc(), ChatMedia.id.desc()).first()
+        latest = max([x.created_at for x in (latest_text, latest_media) if x], default=now_utc())
+        conversations.append({'a':a, 'b':b, 'latest':latest, 'count':Message.query.filter(pair_filter).count()+ChatMedia.query.filter(media_filter).count()})
+    conversations.sort(key=lambda x:x['latest'], reverse=True)
+    return render_template('admin_chats.html', conversations=conversations[:200])
+
+@app.route('/admin/chats/<int:user_a>/<int:user_b>')
+@owner_required
+def admin_chat_view(user_a, user_b):
+    if user_a == user_b:
+        abort(404)
+    a, b = db.session.get(User, user_a), db.session.get(User, user_b)
+    if not a or not b:
+        abort(404)
+    rows = []
+    for m in Message.query.filter(or_(and_(Message.sender_id==user_a,Message.receiver_id==user_b),and_(Message.sender_id==user_b,Message.receiver_id==user_a))).all():
+        rows.append({'id':m.id, 'sender_id':m.sender_id, 'body':m.body, 'filename':None, 'media_type':'text', 'created_at':m.created_at})
+    for m in ChatMedia.query.filter(or_(and_(ChatMedia.sender_id==user_a,ChatMedia.receiver_id==user_b),and_(ChatMedia.sender_id==user_b,ChatMedia.receiver_id==user_a))).all():
+        rows.append({'id':m.id, 'sender_id':m.sender_id, 'body':'', 'filename':m.filename, 'media_type':m.media_type, 'created_at':m.created_at})
+    rows.sort(key=lambda x:(x['created_at'] or now_utc(), x['id']))
+    return render_template('admin_chat_view.html', a=a, b=b, rows=rows)
+
 @app.route('/admin/messages/clear', methods=['POST'])
 @owner_required
 def admin_messages_clear():
