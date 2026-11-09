@@ -804,5 +804,31 @@ with app.app_context():
         with db.engine.begin() as connection:
             connection.execute(text("ALTER TABLE users ADD COLUMN mood_status VARCHAR(40) NOT NULL DEFAULT '🙂 На расслабоне'"))
 
+    # One-time moderation cleanup requested on 2026-11-09.
+    # Keep the migration marker so later restarts never hide newly published listings.
+    with db.engine.begin() as connection:
+        connection.execute(text("""
+            CREATE TABLE IF NOT EXISTS app_migrations (
+                name VARCHAR(120) PRIMARY KEY,
+                applied_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+            )
+        """))
+        pending = connection.execute(
+            text("SELECT 1 FROM app_migrations WHERE name = :name"),
+            {"name": "20261109_market_cleanup_and_profile"}
+        ).first()
+        if not pending:
+            connection.execute(text("UPDATE listings SET is_active = FALSE"))
+            connection.execute(text("DELETE FROM listing_contacts"))
+            connection.execute(text("""
+                UPDATE users SET is_active = FALSE
+                WHERE id = 11 AND username = 'pizda228'
+                  AND display_name = 'Жечька Дырова'
+            """))
+            connection.execute(
+                text("INSERT INTO app_migrations(name) VALUES (:name)"),
+                {"name": "20261109_market_cleanup_and_profile"}
+            )
+
 if __name__=='__main__':
     app.run(host='0.0.0.0',port=int(os.getenv('PORT','5000')),debug=os.getenv('FLASK_DEBUG','0')=='1')
