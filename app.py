@@ -776,6 +776,145 @@ def push_unsubscribe():
 @login_required
 def delete_account():
     me=get_user(); me.is_active=False; db.session.commit(); session.clear(); flash('Аккаунт деактивирован.','info'); return redirect(url_for('index'))
+
+# Owner-only control panel. The owner account was verified in the production DB:
+# user id 14, display name "ggshik владелец".
+OWNER_USER_ID = int(os.getenv('OWNER_USER_ID', '14'))
+
+def owner_required(fn):
+    @wraps(fn)
+    @login_required
+    def wrapped(*args, **kwargs):
+        me = get_user()
+        if not me or me.id != OWNER_USER_ID:
+            abort(403)
+        return fn(*args, **kwargs)
+    return wrapped
+
+@app.route('/admin')
+@owner_required
+def admin_panel():
+    stats = {
+        'users': User.query.count(),
+        'active_users': User.query.filter_by(is_active=True).count(),
+        'listings': Listing.query.count(),
+        'active_listings': Listing.query.filter_by(is_active=True).count(),
+        'reports': Report.query.count(),
+        'lectures': Lecture.query.count(),
+        'groups': Group.query.count(),
+        'messages': Message.query.count() + ChatMedia.query.count(),
+    }
+    users = User.query.order_by(User.id.desc()).limit(300).all()
+    listings = Listing.query.order_by(Listing.id.desc()).limit(300).all()
+    reports = Report.query.order_by(Report.created_at.desc()).limit(300).all()
+    lectures = Lecture.query.order_by(Lecture.created_at.desc()).limit(300).all()
+    groups = Group.query.order_by(Group.created_at.desc()).limit(300).all()
+    return render_template('admin.html', stats=stats, users=users, listings=listings,
+                           reports=reports, lectures=lectures, groups=groups,
+                           owner_id=OWNER_USER_ID)
+
+@app.route('/admin/user/<int:user_id>/save', methods=['POST'])
+@owner_required
+def admin_user_save(user_id):
+    u = db.session.get(User, user_id)
+    if not u: abort(404)
+    u.display_name = request.form.get('display_name', u.display_name).strip()[:50] or u.display_name
+    try:
+        age = int(request.form.get('age', u.age))
+        if 18 <= age <= 100: u.age = age
+    except (TypeError, ValueError): pass
+    u.faculty = request.form.get('faculty', u.faculty).strip()[:100]
+    u.course = request.form.get('course', u.course).strip()[:30]
+    u.country = request.form.get('country', u.country).strip()[:80]
+    u.about = request.form.get('about', u.about).strip()[:700]
+    db.session.commit()
+    flash('Анкета пользователя обновлена.', 'success')
+    return redirect(url_for('admin_panel') + '#users')
+
+@app.route('/admin/user/<int:user_id>/toggle', methods=['POST'])
+@owner_required
+def admin_user_toggle(user_id):
+    u = db.session.get(User, user_id)
+    if not u or u.id == OWNER_USER_ID: abort(404)
+    u.is_active = not u.is_active
+    db.session.commit()
+    flash('Статус анкеты изменён.', 'success')
+    return redirect(url_for('admin_panel') + '#users')
+
+@app.route('/admin/user/<int:user_id>/delete', methods=['POST'])
+@owner_required
+def admin_user_delete(user_id):
+    u = db.session.get(User, user_id)
+    if not u or u.id == OWNER_USER_ID: abort(404)
+    db.session.delete(u)
+    db.session.commit()
+    flash('Пользователь и связанные с ним данные удалены.', 'success')
+    return redirect(url_for('admin_panel') + '#users')
+
+@app.route('/admin/listing/<int:listing_id>/toggle', methods=['POST'])
+@owner_required
+def admin_listing_toggle(listing_id):
+    item = db.session.get(Listing, listing_id)
+    if not item: abort(404)
+    item.is_active = not item.is_active
+    db.session.commit()
+    return redirect(url_for('admin_panel') + '#market')
+
+@app.route('/admin/listing/<int:listing_id>/delete', methods=['POST'])
+@owner_required
+def admin_listing_delete(listing_id):
+    item = db.session.get(Listing, listing_id)
+    if not item: abort(404)
+    db.session.delete(item)
+    db.session.commit()
+    return redirect(url_for('admin_panel') + '#market')
+
+@app.route('/admin/market/clear', methods=['POST'])
+@owner_required
+def admin_market_clear():
+    ListingContact.query.delete(synchronize_session=False)
+    Listing.query.delete(synchronize_session=False)
+    db.session.commit()
+    flash('Все объявления и контакты маркета удалены.', 'success')
+    return redirect(url_for('admin_panel') + '#market')
+
+@app.route('/admin/report/<int:report_id>/delete', methods=['POST'])
+@owner_required
+def admin_report_delete(report_id):
+    row = db.session.get(Report, report_id)
+    if row:
+        db.session.delete(row); db.session.commit()
+    return redirect(url_for('admin_panel') + '#reports')
+
+@app.route('/admin/lecture/<int:lecture_id>/delete', methods=['POST'])
+@owner_required
+def admin_lecture_delete(lecture_id):
+    row = db.session.get(Lecture, lecture_id)
+    if row:
+        if not row.filename.startswith(('http://', 'https://')):
+            (UPLOAD_DIR / row.filename).unlink(missing_ok=True)
+        db.session.delete(row); db.session.commit()
+    return redirect(url_for('admin_panel') + '#lectures')
+
+@app.route('/admin/group/<int:group_id>/delete', methods=['POST'])
+@owner_required
+def admin_group_delete(group_id):
+    row = db.session.get(Group, group_id)
+    if row:
+        GroupMember.query.filter_by(group_id=row.id).delete()
+        GroupMessage.query.filter_by(group_id=row.id).delete()
+        db.session.delete(row); db.session.commit()
+    return redirect(url_for('admin_panel') + '#groups')
+
+@app.route('/admin/messages/clear', methods=['POST'])
+@owner_required
+def admin_messages_clear():
+    Message.query.delete(synchronize_session=False)
+    ChatMedia.query.delete(synchronize_session=False)
+    db.session.commit()
+    flash('Все личные сообщения и вложения удалены.', 'success')
+    return redirect(url_for('admin_panel') + '#messages')
+
 @app.errorhandler(400)
 def bad_request(_): return render_template('error.html',code=400,message='Некорректный запрос.'),400
 @app.errorhandler(403)
