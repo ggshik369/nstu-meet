@@ -46,3 +46,13 @@
   table { display: block; max-width: 100%; overflow-x: auto; }
   input[type=file].form-control { font-size: .75rem !important; padding: 6px !important; }
 }
+/* Bottom navigation: one home button, six clear primary destinations */
+@media(max-width:767.98px){
+ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
+ .mobile-bottom-nav{position:fixed;z-index:1050;left:10px;right:10px;bottom:calc(8px + env(safe-area-inset-bottom));display:flex;justify-content:space-around;align-items:center;gap:2px;padding:9px 5px 8px;border:1px solid rgba(255,255,255,.18);border-radius:22px;background:rgba(17,15,29,.86);backdrop-filter:blur(24px) saturate(165%);-webkit-backdrop-filter:blur(24px) saturate(165%);box-shadow:0 12px 36px rgba(0,0,0,.42),0 0 25px rgba(151,112,255,.18)}
+ .mobile-bottom-nav a{display:flex;flex:1;min-width:0;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:rgba(255,255,255,.72);text-decoration:none;border-radius:14px;padding:3px 1px;transition:background .2s,transform .2s,color .2s}
+ .mobile-bottom-nav a span{font-size:20px;line-height:1.15}.mobile-bottom-nav a small{font-size:9px;white-space:nowrap;letter-spacing:-.1px}
+ .mobile-bottom-nav a:active,.mobile-bottom-nav a:hover{color:#fff;background:rgba(164,135,255,.18);transform:translateY(-2px)}
+ footer{padding-bottom:8px!important}
+}
+@media(min-width:768px){.mobile-bottom-nav{display:none}}
