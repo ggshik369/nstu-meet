@@ -296,3 +296,114 @@ body:before{filter:blur(14px);opacity:.35;inset:-5%}
 body:before,body:after{display:none}
 .card,.profile-card,.listing-card,.market-card,.group-card,.chat-card,.feature-card,.glass-card,.stat-card,.match-card,.form-shell{backdrop-filter:none}
 }
+
+
+/* v24 — Liquid glass, card halos, vivid controls and lightweight motion */
+:root{
+  --glass-bg:rgba(24,25,39,.68);
+  --glass-edge:rgba(255,255,255,.16);
+  --glass-glow:rgba(153,126,255,.28);
+  --glass-cyan:rgba(113,232,255,.20);
+}
+.brand-orb{
+  width:40px!important;height:40px!important;border-radius:14px!important;
+  font-size:1.35rem!important;animation:brand-bob 3.4s ease-in-out infinite;
+  box-shadow:0 5px 18px rgba(143,112,255,.38),0 0 24px rgba(143,112,255,.18);
+}
+@keyframes brand-bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-6px) rotate(5deg)}}
+
+/* Liquid-glass profile cards with a soft light pool beneath each frame */
+.person-card,.profile-card,.match-card,.like-card,.listing-card,.market-card,.group-card,.feature-card,.glass-card{
+  position:relative;isolation:isolate;overflow:hidden;
+  background:linear-gradient(145deg,rgba(34,34,52,.78),rgba(15,16,27,.86))!important;
+  border:1px solid rgba(255,255,255,.15)!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(145%);
+  backdrop-filter:blur(12px) saturate(145%);
+  transition:transform .28s cubic-bezier(.2,.75,.25,1),border-color .28s,box-shadow .28s;
+}
+.person-card:before,.profile-card:before,.match-card:before,.like-card:before,.listing-card:before,.market-card:before,.group-card:before,.feature-card:before,.glass-card:before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(125deg,rgba(255,255,255,.10),transparent 26%,transparent 68%,rgba(137,119,255,.08));
+  opacity:.8;
+}
+.person-card:after,.profile-card:after,.match-card:after,.like-card:after,.listing-card:after,.market-card:after,.group-card:after,.feature-card:after,.glass-card:after{
+  content:"";position:absolute;z-index:-2;left:12%;right:12%;bottom:-17px;height:32px;
+  border-radius:50%;background:linear-gradient(90deg,rgba(104,211,255,.08),rgba(158,125,255,.52),rgba(255,151,213,.14));
+  filter:blur(17px);opacity:.72;pointer-events:none;transition:opacity .28s,filter .28s;
+}
+.person-card:hover,.profile-card:hover,.match-card:hover,.like-card:hover,.listing-card:hover,.market-card:hover,.group-card:hover,.feature-card:hover,.glass-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(180,163,255,.55)!important;
+  box-shadow:0 19px 42px rgba(0,0,0,.38),0 0 0 1px rgba(165,143,255,.10),0 0 26px rgba(139,117,255,.16),inset 0 1px 0 rgba(255,255,255,.18)!important;
+}
+.person-card:hover:after,.profile-card:hover:after,.match-card:hover:after,.like-card:hover:after,.listing-card:hover:after,.market-card:hover:after,.group-card:hover:after,.feature-card:hover:after,.glass-card:hover:after{opacity:1;filter:blur(21px)}
+.person-card>* ,.profile-card>* ,.match-card>* ,.like-card>* ,.listing-card>* ,.market-card>* ,.group-card>* ,.feature-card>* ,.glass-card>*{position:relative;z-index:1}
+
+/* Liquid-glass chats, chat rows and translucent message bubbles */
+.chat-shell{
+  background:linear-gradient(145deg,rgba(29,29,45,.82),rgba(11,12,21,.88))!important;
+  border:1px solid rgba(255,255,255,.16)!important;
+  box-shadow:0 22px 60px rgba(0,0,0,.42),0 0 32px rgba(133,108,255,.10),inset 0 1px rgba(255,255,255,.12)!important;
+  -webkit-backdrop-filter:blur(15px) saturate(150%);backdrop-filter:blur(15px) saturate(150%);
+  animation:chat-arrive .55s cubic-bezier(.2,.7,.2,1) both;
+}
+.chat-header,.chat-compose{background:rgba(255,255,255,.035)!important;backdrop-filter:blur(10px)}
+.chat-list-item{
+  position:relative;overflow:hidden;
+  background:linear-gradient(115deg,rgba(255,255,255,.075),rgba(120,105,180,.075))!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10),0 8px 24px rgba(0,0,0,.20);
+  -webkit-backdrop-filter:blur(12px) saturate(145%);backdrop-filter:blur(12px) saturate(145%);
+  transition:transform .24s,border-color .24s,box-shadow .24s;
+}
+.chat-list-item:hover{transform:translateX(5px) scale(1.008)!important;border-color:rgba(167,145,255,.58)!important;box-shadow:0 10px 28px rgba(113,93,205,.18),inset 0 1px rgba(255,255,255,.16)}
+.message{background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(120,110,170,.12))!important;border-color:rgba(255,255,255,.13)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.message-row.mine .message{background:linear-gradient(135deg,rgba(130,103,225,.58),rgba(186,119,197,.35))!important;border-color:rgba(196,174,255,.30)!important}
+.message-row{animation:message-arrive .28s ease both}
+
+/* Report and block controls get clear hover/focus feedback */
+details summary{cursor:pointer;transition:color .2s,text-shadow .2s}
+details summary:hover{color:#d8caff!important;text-shadow:0 0 12px rgba(168,139,255,.48)}
+.btn-outline-danger,.btn-danger,[action*="/report"] .btn{
+  transition:transform .2s,box-shadow .2s,border-color .2s,background .2s!important;
+}
+.btn-outline-danger:hover,.btn-danger:hover,[action*="/report"] .btn:hover{
+  color:#fff!important;border-color:#ff83b6!important;
+  background:linear-gradient(120deg,rgba(211,65,125,.94),rgba(137,74,180,.94))!important;
+  box-shadow:0 0 0 1px rgba(255,139,190,.24),0 0 18px rgba(255,92,164,.42),0 8px 22px rgba(0,0,0,.22)!important;
+  transform:translateY(-2px);
+}
+.btn-outline-secondary[title*="Заблокировать"]:hover{
+  color:#fff!important;border-color:rgba(255,135,155,.75)!important;
+  background:rgba(170,62,92,.22)!important;box-shadow:0 0 18px rgba(255,91,135,.28);
+}
+
+/* Small purposeful motion; transforms/opacity only to keep it inexpensive */
+@keyframes chat-arrive{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes message-arrive{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glass-sheen{0%{transform:translateX(-130%)}100%{transform:translateX(130%)}}
+.btn-primary,.support-button{position:relative;overflow:hidden}
+.btn-primary:after,.support-button:after{
+  content:"";position:absolute;top:-40%;bottom:-40%;left:0;width:38%;pointer-events:none;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:translateX(-140%);transition:transform .65s ease;
+}
+.btn-primary:hover:after,.support-button:hover:after{transform:translateX(360%)}
+.avatar{box-shadow:0 0 0 1px rgba(255,255,255,.12),0 5px 20px rgba(144,119,255,.24)}
+.feature-icon{width:64px!important;height:64px!important;font-size:1.75rem!important;animation:feature-bob 3.8s ease-in-out infinite;box-shadow:0 8px 25px rgba(135,112,255,.18)}
+@keyframes feature-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+/* Faster first paint and lower GPU cost on phones */
+img{content-visibility:auto}
+@media(max-width:767px){
+  .person-card,.profile-card,.match-card,.like-card,.listing-card,.market-card,.group-card,.feature-card,.glass-card,.chat-shell,.chat-list-item{
+    -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+  }
+  .person-card:after,.profile-card:after,.match-card:after,.like-card:after,.listing-card:after,.market-card:after,.group-card:after,.feature-card:after,.glass-card:after{filter:blur(12px);opacity:.48}
+  .brand-orb{width:38px!important;height:38px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .brand-orb,.feature-icon,.chat-shell,.message-row{animation:none!important}
+  .btn-primary:after,.support-button:after{display:none!important}
+}
