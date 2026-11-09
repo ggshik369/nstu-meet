@@ -224,3 +224,41 @@ footer{animation:page-enter .8s .15s both}
 ::selection{background:rgba(255,133,189,.35);color:#fff}
 @media(hover:none){.motion-tilt{transform:none!important}.card:before,.profile-card:before,.listing-card:before,.market-card:before,.group-card:before,.chat-card:before,.feature-card:before,.glass-card:before,.stat-card:before,.match-card:before{display:none}}
 @media(prefers-reduced-motion:reduce){main h1{animation:none;background:none;color:var(--ink)}.motion-tilt{transform:none!important}}
+
+
+/* ===== SOCIAL PREMIUM MOTION / 2026 ===== */
+:root{--neon-violet:#9b7bff;--neon-pink:#ff75bd;--neon-blue:#70c8ff;--glass:rgba(28,25,51,.68)}
+html{scroll-padding-top:90px;scrollbar-color:rgba(161,138,255,.55) #100f20;scrollbar-width:thin}
+body{background-color:#0b0a16;background-image:radial-gradient(ellipse at 8% 12%,rgba(124,88,255,.25),transparent 32%),radial-gradient(ellipse at 92% 18%,rgba(255,89,175,.17),transparent 29%),radial-gradient(ellipse at 52% 100%,rgba(75,177,255,.10),transparent 35%),linear-gradient(145deg,#0b0a16,#121027 55%,#0b0a16);background-size:140% 140%;animation:premium-aurora 24s ease-in-out infinite alternate}
+@keyframes premium-aurora{0%{background-position:0% 0%}100%{background-position:100% 100%}}
+body:before{inset:-35%;opacity:.85;background:radial-gradient(ellipse at 20% 35%,rgba(151,119,255,.14),transparent 22%),radial-gradient(ellipse at 75% 65%,rgba(255,111,190,.11),transparent 24%),radial-gradient(ellipse at 55% 15%,rgba(91,205,255,.08),transparent 18%);filter:blur(35px);animation:aurora-float 28s ease-in-out infinite alternate}
+@keyframes aurora-float{0%{transform:translate3d(-2%,-1%,0) rotate(-4deg) scale(1)}50%{transform:translate3d(2%,2%,0) rotate(4deg) scale(1.08)}100%{transform:translate3d(-1%,3%,0) rotate(-2deg) scale(1.03)}}
+.nav-gradient{background:rgba(12,10,27,.76)!important;border-bottom:1px solid rgba(194,170,255,.16);box-shadow:0 8px 40px rgba(0,0,0,.18)}
+.nav-gradient:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--neon-violet),var(--neon-pink),var(--neon-blue),transparent);background-size:200% 100%;animation:line-flow 7s linear infinite;pointer-events:none}
+@keyframes line-flow{to{background-position:200% 0}}
+.brand-orb{box-shadow:0 0 18px rgba(161,138,255,.28),inset 0 1px 0 rgba(255,255,255,.35)}
+.navbar-brand{filter:drop-shadow(0 0 12px rgba(161,138,255,.15))}
+.nav-link{border-radius:12px}
+.nav-link:hover{background:rgba(161,138,255,.09);text-shadow:0 0 16px rgba(255,255,255,.3)}
+.btn,.support-button{isolation:isolate;border:1px solid rgba(255,255,255,.12)}
+.btn-primary,.btn-dark,.btn-light,.premium-link,.support-button{background-image:linear-gradient(115deg,rgba(161,138,255,.18),rgba(255,133,189,.12));}
+.btn:before,.support-button:before{content:"";position:absolute;inset:-80% auto -80% -35%;width:24%;transform:rotate(22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transition:left .7s var(--motion-spring);z-index:-1}
+.btn:hover:before,.support-button:hover:before{left:125%}
+.card,.profile-card,.listing-card,.market-card,.group-card,.chat-card,.feature-card,.glass-card,.stat-card,.match-card,.form-shell{border:1px solid rgba(202,183,255,.13);background:linear-gradient(145deg,rgba(35,31,65,.86),rgba(20,18,40,.88));backdrop-filter:blur(16px);box-shadow:0 12px 38px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.035)}
+.card:after,.profile-card:after,.listing-card:after,.market-card:after,.group-card:after,.chat-card:after,.feature-card:after,.glass-card:after,.stat-card:after,.match-card:after{content:"";position:absolute;inset:0;padding:1px;border-radius:inherit;pointer-events:none;opacity:0;background:linear-gradient(125deg,rgba(161,138,255,.7),rgba(255,133,189,.55),rgba(123,233,223,.4),rgba(161,138,255,.7));background-size:250% 250%;animation:border-flow 8s linear infinite;mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask-composite:exclude;transition:opacity .4s}
+.card:hover:after,.profile-card:hover:after,.listing-card:hover:after,.market-card:hover:after,.group-card:hover:after,.chat-card:hover:after,.feature-card:hover:after,.glass-card:hover:after,.stat-card:hover:after,.match-card:hover:after{opacity:.9}
+@keyframes border-flow{to{background-position:250% 50%}}
+.card:hover,.profile-card:hover,.listing-card:hover,.market-card:hover,.group-card:hover,.chat-card:hover,.feature-card:hover,.glass-card:hover,.stat-card:hover,.match-card:hover{box-shadow:0 22px 58px rgba(0,0,0,.28),0 0 28px rgba(161,138,255,.10),inset 0 1px 0 rgba(255,255,255,.06)}
+img{border-radius:inherit}
+.profile-card img,.listing-card img,.market-card img{transition:transform .8s var(--motion-spring),filter .7s}
+.profile-card:hover img,.listing-card:hover img,.market-card:hover img{transform:scale(1.055);filter:saturate(1.12) contrast(1.03)}
+.form-control,.form-select,input,textarea,select{background-color:rgba(10,9,24,.55)!important;border-color:rgba(191,174,255,.17)!important}
+.form-control:focus,.form-select:focus,input:focus,textarea:focus,select:focus{border-color:rgba(177,149,255,.72)!important;box-shadow:0 0 0 3px rgba(161,138,255,.13),0 0 28px rgba(161,138,255,.12)!important}
+.badge{box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+footer{border-top:1px solid rgba(255,255,255,.06);padding-top:22px}
+#motion-progress{position:fixed;top:0;left:0;width:0;height:3px;z-index:2000;background:linear-gradient(90deg,var(--neon-violet),var(--neon-pink),var(--neon-blue));box-shadow:0 0 14px rgba(255,117,189,.7);border-radius:0 4px 4px 0;pointer-events:none}
+#motion-top{position:fixed;right:22px;bottom:22px;z-index:1200;width:46px;height:46px;border:1px solid rgba(255,255,255,.2);border-radius:16px;background:rgba(29,24,55,.78);backdrop-filter:blur(14px);color:#fff;font-size:20px;box-shadow:0 8px 30px rgba(0,0,0,.28),0 0 22px rgba(161,138,255,.18);opacity:0;visibility:hidden;transform:translateY(12px) scale(.9);transition:all .35s var(--motion-spring)}
+#motion-top.is-shown{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+#motion-top:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 12px 34px rgba(161,138,255,.28)}
+@media(max-width:767.98px){#motion-top{right:14px;bottom:14px;width:42px;height:42px;border-radius:14px}.nav-gradient{backdrop-filter:blur(12px)}}
+@media(prefers-reduced-motion:reduce){body{animation:none;background-position:center}body:before{animation:none}#motion-progress{display:none}#motion-top{transition:none}}
