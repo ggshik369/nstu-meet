@@ -262,3 +262,37 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding-top:22px}
 #motion-top:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 12px 34px rgba(161,138,255,.28)}
 @media(max-width:767.98px){#motion-top{right:14px;bottom:14px;width:42px;height:42px;border-radius:14px}.nav-gradient{backdrop-filter:blur(12px)}}
 @media(prefers-reduced-motion:reduce){body{animation:none;background-position:center}body:before{animation:none}#motion-progress{display:none}#motion-top{transition:none}}
+
+
+/* ===== Performance tune + stronger controlled glow ===== */
+:root{--glow-violet:rgba(151,117,255,.42);--glow-pink:rgba(255,112,190,.34);--glow-cyan:rgba(104,210,255,.24)}
+/* Keep the rich atmosphere, but avoid continuously repainting the whole page. */
+body{animation:none!important;background-position:center;background-size:cover}
+body:before{animation:none!important;filter:blur(22px);opacity:.55;inset:-12%;will-change:auto}
+body:after{opacity:.12;background-size:36px 36px}
+main.container{contain:paint}
+.nav-gradient{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.card,.profile-card,.listing-card,.market-card,.group-card,.chat-card,.feature-card,.glass-card,.stat-card,.match-card,.form-shell{backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 10px 28px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.045)}
+.card:hover,.profile-card:hover,.listing-card:hover,.market-card:hover,.group-card:hover,.chat-card:hover,.feature-card:hover,.glass-card:hover,.stat-card:hover,.match-card:hover,.form-shell:focus-within{box-shadow:0 16px 38px rgba(0,0,0,.28),0 0 0 1px rgba(177,145,255,.22),0 0 24px var(--glow-violet),0 0 42px rgba(255,112,190,.10),inset 0 1px 0 rgba(255,255,255,.08)}
+.card:after,.profile-card:after,.listing-card:after,.market-card:after,.group-card:after,.chat-card:after,.feature-card:after,.glass-card:after,.stat-card:after,.match-card:after{animation:none;background:linear-gradient(120deg,rgba(161,138,255,.8),rgba(255,133,189,.7),rgba(123,233,223,.55));}
+.card:hover:after,.profile-card:hover:after,.listing-card:hover:after,.market-card:hover:after,.group-card:hover:after,.chat-card:hover:after,.feature-card:hover:after,.glass-card:hover:after,.stat-card:hover:after,.match-card:hover:after{opacity:1}
+.btn:focus-visible,.support-button:focus-visible,.nav-link:focus-visible{outline:2px solid rgba(190,163,255,.9);outline-offset:3px;box-shadow:0 0 0 5px rgba(161,138,255,.15),0 0 24px var(--glow-violet)}
+.btn:hover,.support-button:hover{box-shadow:0 8px 24px rgba(0,0,0,.22),0 0 0 1px rgba(190,163,255,.28),0 0 22px var(--glow-violet),0 0 34px var(--glow-pink)}
+.btn-primary,.btn-dark,.btn-light,.premium-link{box-shadow:0 0 16px rgba(161,138,255,.12)}
+.brand-orb{box-shadow:0 0 10px rgba(161,138,255,.32),0 0 24px rgba(255,133,189,.12),inset 0 1px 0 rgba(255,255,255,.35)}
+#motion-top{box-shadow:0 8px 22px rgba(0,0,0,.3),0 0 18px var(--glow-violet),0 0 30px rgba(255,112,190,.12)}
+#motion-progress{box-shadow:0 0 8px var(--glow-violet),0 0 18px var(--glow-pink)}
+/* Limit expensive hover transforms to devices that really have a mouse. */
+@media(hover:hover) and (pointer:fine){
+.card,.profile-card,.listing-card,.market-card,.group-card,.chat-card,.feature-card,.glass-card,.stat-card,.match-card{will-change:auto}
+.card:hover,.profile-card:hover,.listing-card:hover,.market-card:hover,.group-card:hover,.chat-card:hover,.feature-card:hover,.glass-card:hover,.stat-card:hover,.match-card:hover{will-change:transform,box-shadow}
+}
+@media(max-width:767.98px){
+body:before{filter:blur(14px);opacity:.35;inset:-5%}
+.nav-gradient{backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.card,.profile-card,.listing-card,.market-card,.group-card,.chat-card,.feature-card,.glass-card,.stat-card,.match-card,.form-shell{backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+@media(prefers-reduced-motion:reduce){
+body:before,body:after{display:none}
+.card,.profile-card,.listing-card,.market-card,.group-card,.chat-card,.feature-card,.glass-card,.stat-card,.match-card,.form-shell{backdrop-filter:none}
+}
