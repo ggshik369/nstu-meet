@@ -83,14 +83,14 @@
     box-shadow: 0 10px 30px rgba(0,0,0,.34), 0 0 20px rgba(151,112,255,.16);
   }
   .mobile-bottom-nav a { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 3px 0; color: rgba(255,255,255,.74); text-decoration: none; border-radius: 12px; }
-  .mobile-bottom-nav a span { font-size: 19px; line-height: 1.15; }
-  .mobile-bottom-nav a small { font-size: clamp(8px, 2.3vw, 9px); line-height: 1.1; white-space: nowrap; }
+  .mobile-bottom-nav a span { font-size: 18px; line-height: 1.15; }
+  .mobile-bottom-nav a small { font-size: clamp(7px, 2.1vw, 8.5px); line-height: 1.1; white-space: nowrap; }
   .mobile-bottom-nav a:active { background: rgba(164,135,255,.2); color: #fff; transform: scale(.96); }
   footer { padding-bottom: 8px !important; }
 }
 @media (max-width: 380px) {
   .mobile-bottom-nav { left: 5px; right: 5px; padding-inline: 1px; }
-  .mobile-bottom-nav a small { font-size: 8px; letter-spacing: -.25px; }
+  .mobile-bottom-nav a small { font-size: 7px; letter-spacing: -.35px; }
   .navbar .push-enable { font-size: 0 !important; width: 36px; overflow: hidden; }
   .navbar .push-enable:before { content: "🔔"; font-size: 16px; }
   .hero .d-flex .btn { flex: 1 1 100%; }
